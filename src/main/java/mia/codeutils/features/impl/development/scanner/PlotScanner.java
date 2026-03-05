@@ -99,7 +99,7 @@ public final class PlotScanner extends Feature implements PacketListener, TickEv
                     if (LocationAPI.getMode().equals(DFMode.DEV)) {
                         if (!plotScanningMode.equals(PlotScanningMode.NONE)) {
                             Mod.message("Killed current plot scan.");
-                            killScan();
+                            killScan();//
                         } else {
                             Mod.messageError("No active plot scan to kill.");
                         }
