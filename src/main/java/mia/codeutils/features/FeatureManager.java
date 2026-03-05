@@ -5,6 +5,8 @@ import mia.codeutils.features.impl.development.CodeSignColorer;
 import mia.codeutils.features.impl.development.ItemTagViewer;
 import mia.codeutils.features.impl.development.SignPeek;
 import mia.codeutils.features.impl.development.chest_previewer.ChestViewer;
+import mia.codeutils.features.impl.development.scanner.PlotLoader;
+import mia.codeutils.features.impl.development.scanner.PlotScanner;
 import mia.codeutils.features.impl.general.AutoTip;
 import mia.codeutils.features.impl.general.chat.SimplifiedStaffChatTags;
 import mia.codeutils.features.impl.general.title.JoinButton;
@@ -56,6 +58,8 @@ public final class FeatureManager {
         add(new SignPeek(Categories.DEV));
         add(new CPUDisplay(Categories.DEV));
         add(new ItemTagViewer(Categories.DEV));
+        add(new PlotLoader(Categories.DEV));
+        add(new PlotScanner(Categories.DEV));
 
         add(new AutoQueue(Categories.SUPPORT));
         add(new SupportHUD(Categories.SUPPORT));

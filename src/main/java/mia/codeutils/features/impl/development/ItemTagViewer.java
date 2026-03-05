@@ -1,6 +1,7 @@
 package mia.codeutils.features.impl.development;
 
 import mia.codeutils.ColorBank;
+import mia.codeutils.Mod;
 import mia.codeutils.core.KeyBindCategories;
 import mia.codeutils.core.KeyBindManager;
 import mia.codeutils.core.MiaKeyBind;
@@ -9,6 +10,7 @@ import mia.codeutils.features.Feature;
 import mia.codeutils.features.impl.internal.mode.LocationAPI;
 import mia.codeutils.features.listeners.impl.RegisterKeyBindEvent;
 import mia.codeutils.features.listeners.impl.RenderTooltip;
+import mia.codeutils.features.listeners.impl.TickEvent;
 import mia.codeutils.features.parameters.ParameterIdentifier;
 import mia.codeutils.features.parameters.impl.ColorDataField;
 import net.minecraft.core.component.DataComponentType;
@@ -23,10 +25,11 @@ import net.minecraft.world.item.component.CustomData;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.*;
 import java.util.List;
 
-public final class ItemTagViewer extends Feature implements RenderTooltip, RegisterKeyBindEvent {
+public final class ItemTagViewer extends Feature implements RenderTooltip, RegisterKeyBindEvent, TickEvent {
     private static ColorDataField regularKeyColor;
     private static ColorDataField stringValueColor;
     private static ColorDataField numberValueColor;
@@ -34,7 +37,8 @@ public final class ItemTagViewer extends Feature implements RenderTooltip, Regis
     //private static final int componentDataKeyColor = 0x9cffca;
     //private static final int cKeyColor = 0xaaaaff;
 
-    private final MiaKeyBind showItemTags;
+    private final MiaKeyBind showItemTagsKeybind;
+    private boolean showItemTags;
 
     private static final Component tagText = Component.literal("› ").withColor(ColorBank.MC_GRAY).append(Component.literal("Tags:").withColor(ColorBank.WHITE));
     private static final Component delimiterText = Component.literal(" : ").withColor(ColorBank.MC_DARK_GRAY);
@@ -47,16 +51,15 @@ public final class ItemTagViewer extends Feature implements RenderTooltip, Regis
         stringValueColor = new ColorDataField("String Value Color", ParameterIdentifier.of(this, "string_value_color"), new Color(0xbdd7ff), true);
         numberValueColor = new ColorDataField("Number Value Color", ParameterIdentifier.of(this, "number_value_color"), new Color(0xff5555), true);
 
-        showItemTags = new MiaKeyBind("Show Hypercube Item Tag", GLFW.GLFW_KEY_LEFT_ALT, KeyBindCategories.DEVELOPMENT_CATEGORY);
+        showItemTagsKeybind = new MiaKeyBind("Show Hypercube Item Tag", GLFW.GLFW_KEY_LEFT_ALT, KeyBindCategories.DEVELOPMENT_CATEGORY, () -> {
+            showItemTags = !showItemTags;
+        });
     }
 
 
     @Override
     public void tooltip(ItemStack item, Item.TooltipContext context, TooltipFlag type, List<Component> textList) {
         //if (!LocationAPI.getMode().canViewCode()) return;
-        item.getComponents().forEach(typedDataComponent -> {
-            //Mod.message(typedDataComponent.toString());
-        });
 
         CustomData data = item.getComponents().getOrDefault(CUSTOM_DATA_DATA_COMPONENT_TYPE, CustomData.EMPTY);
         Set<Map.Entry<String, Tag>> dataSet = data.copyTag().entrySet();
@@ -75,7 +78,7 @@ public final class ItemTagViewer extends Feature implements RenderTooltip, Regis
             if (tag.isPresent()) {
                 for (Map.Entry<String, Tag> entry : tag.get().entrySet()) {
                     String rawKey = entry.getKey().substring(10); // chops off "hypercube:"
-                    if (List.of("varitem", "item_instance").contains(rawKey)) continue;
+                    if (List.of("varitem", "item_instance", "codetemplatedata").contains(rawKey)) continue;
                     Tag rawValue = entry.getValue();
 
                     Component valueEntry = null;
@@ -108,7 +111,17 @@ public final class ItemTagViewer extends Feature implements RenderTooltip, Regis
 
     @Override
     public void registerKeyBind() {
-        KeyBindManager.registerKeyBind(showItemTags);
+        KeyBindManager.registerKeyBind(showItemTagsKeybind);
+    }
+
+    @Override
+    public void tickR(int tick) {
+
+    }
+
+    @Override
+    public void tickF(int tick) {
+        showItemTagsKeybind.tick();
     }
 }
 

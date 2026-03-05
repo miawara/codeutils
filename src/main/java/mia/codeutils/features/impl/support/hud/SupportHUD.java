@@ -71,7 +71,7 @@ public final class SupportHUD extends Feature implements RenderHUD, ChatEventLis
 
 
         // queue missing kill event
-        matcher = Pattern.compile("^\\[SUPPORT] (.{3,16}) joined the support queue\\. ▶ Reason: ([A-Za-z0-9_ ]*)").matcher(text);
+        matcher = Pattern.compile("^\\[SUPPORT] (.{3,16}) joined the support queue\\. ▶ Reason: (.*) \\[ACCEPT]").matcher(text);
         if (matcher.find()) {
             sessionQueue.put(matcher.group(1), new SessionEntry(matcher.group(1), matcher.group(2), System.currentTimeMillis()));
         }
@@ -81,22 +81,23 @@ public final class SupportHUD extends Feature implements RenderHUD, ChatEventLis
             sessionQueue.remove(matcher.group(1));
         }
 
-        matcher = Pattern.compile("^\\[SUPPORT] (.{3,16}) entered a session with (.{3,16})\\.[A-Za-z0-9_ ]*").matcher(text);
+        matcher = Pattern.compile("^\\[SUPPORT] (.{3,16}) entered a session with (.{3,16})\\..*").matcher(text);
         if (matcher.find()) {
+            String supportName = matcher.group(1);
             String supporteeName = matcher.group(2);
             //Mod.log(matcher.group(1) + " " + playerName);
-            if (matcher.group(1).equals(playerName)) {
-                currentSupportSession = sessionQueue.getOrDefault(playerName, new SessionEntry(playerName, "failed to grab reason :/", System.currentTimeMillis()));
+            if (supportName.equals(playerName)) {
+                currentSupportSession = sessionQueue.getOrDefault(supporteeName, new SessionEntry(supporteeName, "failed to grab reason :/", System.currentTimeMillis()));
                 currentSupportSession.timestamp = System.currentTimeMillis();
             }
 
             sessionQueue.remove(supporteeName);
         }
 
-        matcher = Pattern.compile("^\\[SUPPORT] (.{3,16}) terminated a session with (.{3,16})\\. ▶ [A-Za-z0-9_ ]*").matcher(text);
+        matcher = Pattern.compile("^\\[SUPPORT] (.{3,16}) terminated a session with (.{3,16})\\. ▶ .*").matcher(text);
         if (matcher.find() && matcher.group(1).equals(playerName)) {currentSupportSession = null;}
 
-        matcher = Pattern.compile("^\\[SUPPORT] (.{3,16}) finished a session with (.{3,16})\\. ▶ [A-Za-z0-9_ ]*").matcher(text);
+        matcher = Pattern.compile("^\\[SUPPORT] (.{3,16}) finished a session with (.{3,16})\\. ▶ .*").matcher(text);
         if (matcher.find() && matcher.group(1).equals(playerName)) {currentSupportSession = null;}
 
         // questions unfinished
