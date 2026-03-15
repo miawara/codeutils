@@ -3,6 +3,7 @@
   "package": "mia.modmod.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "hud.MChatScreen",
     "hud.MInGameHUD",
     "hud.MMouse",
     "hud.MTitleScreen",
@@ -10,8 +11,8 @@
     "player.MClientPlayerInteractionManager",
     "player.MLivingEntityRenderer",
     "player.MMinecraftClient",
-    "render.RenderTypeAccessor",
-    "render.MSignBlockEntity"
+    "render.MSignBlockEntity",
+    "render.RenderTypeAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
