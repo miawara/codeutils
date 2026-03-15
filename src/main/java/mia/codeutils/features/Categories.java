@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 public enum Categories {
     GENERAL(new Category("General", "General Features")),
     DEV(new Category("Development", "Developer Features")),
+    DEV_EXPERIMENTAL(new Category("Dev-Experimental", "Unstable developer features")),
     SUPPORT(new Category("Support", "Support Staff Features")),
     MODERATION(new Category("Moderation", "Moderator features")),
     INTERNAL(new Category("Internal", "Machine, turn back now. The layers of this palace are not for your kind."));

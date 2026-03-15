@@ -51,13 +51,13 @@ public final class FeatureManager {
         add(new AutoTip(Categories.GENERAL));
         add(new SimplifiedStaffChatTags(Categories.GENERAL));
 
-        add(new CodeSignColorer(Categories.DEV));
-        add(new ChestViewer(Categories.DEV));
-        add(new SignPeek(Categories.DEV));
+        add(new CodeSignColorer(Categories.DEV_EXPERIMENTAL));
+        add(new ChestViewer(Categories.DEV_EXPERIMENTAL));
+        add(new SignPeek(Categories.DEV_EXPERIMENTAL));
         add(new CPUDisplay(Categories.DEV));
         add(new ItemTagViewer(Categories.DEV));
-        add(new PlotLoader(Categories.DEV));
-        add(new PlotScanner(Categories.DEV));
+        add(new PlotLoader(Categories.DEV_EXPERIMENTAL));
+        add(new PlotScanner(Categories.DEV_EXPERIMENTAL));
         add(new ItemLorePeeker(Categories.DEV));
 
         add(new AutoQueue(Categories.SUPPORT));

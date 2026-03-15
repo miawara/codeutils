@@ -71,7 +71,7 @@ public final class HitRange extends Feature {
 
         boolean isInRange = false;
         for (Player eachPlayer : Mod.MC.level.players()) {
-            if (eachPlayer.getId() != playerId && (!player.isSpectator())) {
+            if (eachPlayer.getId() != playerId && (!eachPlayer.isSpectator())) {
                 if (eachPlayer.getId() == Mod.MC.player.getId() && FeatureManager.getFeature(VanishTracker.class).isInModVanish()) continue;
 
                 AABB boundingBox = eachPlayer.getBoundingBox();

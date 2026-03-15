@@ -4,15 +4,16 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import mia.codeutils.ColorBank;
 import mia.codeutils.Mod;
+import mia.codeutils.core.MathUtils;
 import mia.codeutils.core.StreamUtils;
 import mia.codeutils.features.Categories;
 import mia.codeutils.features.Feature;
 import mia.codeutils.features.FeatureManager;
 import mia.codeutils.features.impl.internal.server.ServerManager;
-import mia.codeutils.features.listeners.impl.RegisterCommandListener;
-import mia.codeutils.features.listeners.impl.RenderHUD;
-import mia.codeutils.features.listeners.impl.ServerConnectionEventListener;
-import mia.codeutils.features.listeners.impl.WorldRenderEventListener;
+import mia.codeutils.features.listeners.impl.*;
+import mia.codeutils.features.parameters.ParameterIdentifier;
+import mia.codeutils.features.parameters.impl.ColorDataField;
+import mia.codeutils.features.parameters.impl.DoubleDataField;
 import mia.codeutils.render.util.*;
 import mia.codeutils.render.util.Point;
 import mia.codeutils.render.util.elements.DrawRect;
@@ -24,31 +25,79 @@ import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.network.protocol.game.ClientboundAnimatePacket;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
+import java.util.*;
 import java.util.List;
 
-public final class PlayerOutliner extends Feature implements RenderHUD, RegisterCommandListener, ServerConnectionEventListener, WorldRenderEventListener {
+public final class PlayerOutliner extends Feature implements RenderHUD, RegisterCommandListener, ServerConnectionEventListener, WorldRenderEventListener, PacketListener {
     private final ArrayList<String> trackedPlayers;
     private LinkedHashMap<String, Float> playerColors;
+    private HashMap<String,ArrayList<Long>> playerClicks;
+
+    private static DoubleDataField timestampSpan;
 
     public PlayerOutliner(Categories category) {
         super(category, "Player Outliner", "outliner", "Outlines tracked players like a gay CCTV camera.");
         trackedPlayers = new ArrayList<>();
         playerColors = new LinkedHashMap<>();
+        playerClicks = new HashMap<>();
+
+        timestampSpan = new DoubleDataField("APS Timespan (seconds)", ParameterIdentifier.of(this, "timespanSpan"), 3.0, true);
     }
+
+
+    private enum ClickType {
+        LEFT,
+        RIGHT
+    }
+
+    @Override
+    public void receivePacket(Packet<?> packet, CallbackInfo ci) {
+        if (packet instanceof ClientboundAnimatePacket entityAnimationS2CPacket) {
+            ClientLevel world = Mod.MC.level;
+            if (world == null) return;
+            Entity entity = world.getEntity(entityAnimationS2CPacket.getId());
+
+            if (entity instanceof Player && entity != Mod.MC.player) {
+                Player targetPlayer = (Player) entity;
+                String targetPlayerName = targetPlayer.getName().getString();
+
+                ClickType clickType = null;
+                if ((entityAnimationS2CPacket.getAction() == ClientboundAnimatePacket.SWING_MAIN_HAND)) {
+                    clickType = ClickType.RIGHT;
+                } else if (entityAnimationS2CPacket.getAction()  == ClientboundAnimatePacket.SWING_OFF_HAND) {
+                    clickType = ClickType.LEFT;
+                }
+                if (clickType != null) {
+                    ArrayList<Long> clicks;
+                    if (playerClicks.containsKey(targetPlayerName)) {
+                        clicks = playerClicks.get(targetPlayerName);
+                    } else {
+                        clicks = new ArrayList<>();
+                    }
+                    clicks.add(System.currentTimeMillis());
+                    playerClicks.put(targetPlayerName, clicks);
+                }
+            }
+        }
+    }
+
 
     @Override
     public void renderHUD(GuiGraphics context, DeltaTracker tickCounter) {
@@ -71,11 +120,26 @@ public final class PlayerOutliner extends Feature implements RenderHUD, Register
         containerTitle.setSelfBinding(new DrawBinding(AxisBinding.NONE, AxisBinding.MIDDLE));
         containerTitle.setParentBinding(new DrawBinding(AxisBinding.NONE, AxisBinding.MIDDLE));
 
+        long currentTS = System.currentTimeMillis();
+
+        if (timestampSpan.getValue() <= 0) {
+            timestampSpan.setValue(1.0);
+            Mod.message(timestampSpan.getName() + " set to invalid double -> automatically set to 1.0");
+        }
+        double seconds = timestampSpan.getValue();
+        long period = (long) (seconds * 1000);
         int i = 0;
         for (String player : trackedPlayers) {
             boolean online = StreamUtils.getPlayerList(false).contains(player);
             int onlineColor = online ? ColorBank.MC_GREEN : ColorBank.MC_RED;
-            Component playerText = Component.literal(player + " ").withColor(0xed7aff).append(Component.literal(online ? "online" : "offline").withColor(onlineColor));
+
+            ArrayList<Long> clicks = playerClicks.getOrDefault(player, new ArrayList<>());
+
+            int numClicks = 0;
+            for (long ts : clicks) if (ts + period >= currentTS) numClicks++;
+
+            String aps = "" + MathUtils.roundToDecimalPlaces(((double) numClicks) / ((double) seconds), 2);
+            Component playerText = Component.literal(player + " ").withColor(0xed7aff).append(Component.literal(aps + " ").withColor(ColorBank.WHITE_GRAY)).append(Component.literal(online ? "online" : "offline").withColor(onlineColor));
             DrawRect playerContainer = new DrawRect(new Point(0,(eachHeight+1) * (i + 1)), new Point(Mod.MC.font.width(playerText.getString()) + (margin + 1) * 2, eachHeight), 0, new ARGB(ColorBank.BLACK, 0.6f), container);
             DrawRect playerContainerSide = new DrawRect(new Point(0,0), new Point(2, playerContainer.getHeight()), 0, new ARGB(onlineColor, 1f), playerContainer);
             DrawText playerTitle = new DrawText(new Point(margin + 2,0), playerText, 0, 1f,false, playerContainer);
@@ -255,6 +319,12 @@ public final class PlayerOutliner extends Feature implements RenderHUD, Register
 
     @Override
     public void WorldRenderEvents_BEFORE_TRANSLUCENT(WorldRenderContext context) {
+
+    }
+
+
+    @Override
+    public void sendPacket(Packet<?> packet, CallbackInfo ci) {
 
     }
 

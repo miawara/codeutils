@@ -2,7 +2,7 @@
 	"schemaVersion": 1,
 	"id": "codeutils",
 	"version": "${version}",
-	"name": ".codeutils",
+	"name": ".modmod",
 	"description": "one person gets meteorclient everyone else has to run",
 	"authors": ["meowara"],
 	"contact": {

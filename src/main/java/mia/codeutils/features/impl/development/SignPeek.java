@@ -40,6 +40,7 @@ import net.minecraft.network.protocol.game.ClientboundSetPlayerInventoryPacket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public final class SignPeek extends Feature implements RenderHUD, TickEvent, PacketListener {
     public final MiaKeyBind getSignName;
@@ -51,6 +52,27 @@ public final class SignPeek extends Feature implements RenderHUD, TickEvent, Pac
             "CALL PROCESS"
     );
 
+    private Optional<String> getCodeFunctionBody(HitResult hitResult) {
+        if (hitResult instanceof BlockHitResult blockHitResult) {
+            BlockPos blockPos = blockHitResult.getBlockPos();
+
+            BlockEntity blockState = Mod.MC.level.getBlockEntity(blockPos);
+            if (blockState instanceof SignBlockEntity signBlockEntity) {
+                ArrayList<String> messages = new ArrayList<>(Arrays.stream(signBlockEntity.getFrontText().getMessages(true)).map(Component::getString).toList());
+                ArrayList<String> validHeaders = new ArrayList<>(grabbableFunctionNamesHeaders);
+
+                String header = messages.get(0);
+                String body = messages.get(1);
+                if (validHeaders.contains(header)) {
+                    if (!body.isEmpty()) {
+                        return Optional.of(body);
+                    }
+                }
+            }
+        }
+        return  Optional.empty();
+    }
+
     public SignPeek(Categories category) {
         super( category, "Sign Peek", "signpeek", "sign that ur gay");
         getSignName = new MiaKeyBind("Get Sign Name", GLFW.GLFW_KEY_F, KeyBindCategories.DEVELOPMENT_CATEGORY, () -> {
@@ -59,42 +81,30 @@ public final class SignPeek extends Feature implements RenderHUD, TickEvent, Pac
             if (Mod.MC.level == null) return;
 
             HitResult hitResult = Mod.MC.player.pick(4.5, 0, false);
-            if (hitResult instanceof BlockHitResult blockHitResult) {
-                BlockPos blockPos = blockHitResult.getBlockPos();
+            Optional<String> codeFunctionBody = getCodeFunctionBody(hitResult);
 
-                BlockEntity blockState = Mod.MC.level.getBlockEntity(blockPos);
-                if (blockState instanceof SignBlockEntity signBlockEntity) {
-                    ArrayList<String> messages = new ArrayList<>(Arrays.stream(signBlockEntity.getFrontText().getMessages(true)).map(Component::getString).toList());
-                    ArrayList<String> validHeaders = new ArrayList<>(grabbableFunctionNamesHeaders);
+            if (codeFunctionBody.isPresent()) {
+                String stringValue = codeFunctionBody.get();
+                Mod.message(Component.literal("Created ").append(Component.literal("[STR]: ").withColor(ColorBank.MC_AQUA)).append(Component.literal(stringValue).withColor(ColorBank.WHITE)));
+                ItemStack item = new ItemStack(Items.STRING);
+                CompoundTag bukkit = new CompoundTag();
+                CompoundTag hypercube = new CompoundTag();
 
-                    String header = messages.get(0);
-                    String body = messages.get(1);
-                    if (validHeaders.contains(header)) {
-                        if (!body.isEmpty()) {
-                            Mod.message(Component.literal("Created ").append(Component.literal("[STR]: ").withColor(ColorBank.MC_AQUA)).append(Component.literal(body).withColor(ColorBank.WHITE)));
-                            String stringValue = body;
-                            ItemStack item = new ItemStack(Items.STRING);
-                            CompoundTag bukkit = new CompoundTag();
-                            CompoundTag hypercube = new CompoundTag();
-
-                            hypercube.putString("hypercube:varitem", "{\"id\":\"txt\",\"data\":{\"name\":\"" + stringValue +"\"}}");
-                            bukkit.put("PublicBukkitValues", hypercube);
-                            item.applyComponents(DataComponentMap.builder()
-                                    .set(DataComponents.CUSTOM_NAME, Component.literal(stringValue).withStyle(style -> style.withItalic(false)))
-                                    .set(DataComponents.CUSTOM_DATA, CustomData.of(bukkit))
-                                            .set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of(5000.0f), List.of(), List.of(), List.of()))
-                                        .build());
-                            Inventory inventory = Mod.MC.player.getInventory();
-                            int selectedSlot = inventory.getSelectedSlot();
-                            if (inventory.getFreeSlot() > 8) {
-                                inventory.setItem(selectedSlot, item);
-                            } else {
-                                inventory.add(item);
-                            }
-                            Mod.message("" + inventory.getSelectedSlot());
-                        }
-                    }
+                hypercube.putString("hypercube:varitem", "{\"id\":\"txt\",\"data\":{\"name\":\"" + stringValue +"\"}}");
+                bukkit.put("PublicBukkitValues", hypercube);
+                item.applyComponents(DataComponentMap.builder()
+                        .set(DataComponents.CUSTOM_NAME, Component.literal(stringValue).withStyle(style -> style.withItalic(false)))
+                        .set(DataComponents.CUSTOM_DATA, CustomData.of(bukkit))
+                        .set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of(5000.0f), List.of(), List.of(), List.of()))
+                        .build());
+                Inventory inventory = Mod.MC.player.getInventory();
+                int selectedSlot = inventory.getSelectedSlot();
+                if (inventory.getFreeSlot() > 8) {
+                    inventory.setItem(selectedSlot, item);
+                } else {
+                    inventory.add(item);
                 }
+                Mod.message("" + inventory.getSelectedSlot());
             }
         });
     }
@@ -153,7 +163,15 @@ public final class SignPeek extends Feature implements RenderHUD, TickEvent, Pac
     public void sendPacket(Packet<?> packet, CallbackInfo ci) {
         if (packet instanceof ServerboundPlayerActionPacket serverboundPlayerActionPacket) {
             if (serverboundPlayerActionPacket.getAction().equals(ServerboundPlayerActionPacket.Action.SWAP_ITEM_WITH_OFFHAND)) {
-                if (getSignName.rawIsDown()) ci.cancel();
+                if (!LocationAPI.getMode().canViewCode()) return;
+                if (Mod.MC.player == null) return;
+                if (Mod.MC.level == null) return;
+
+                HitResult hitResult = Mod.MC.player.pick(4.5, 0, false);
+                Optional<String> codeFunctionBody = getCodeFunctionBody(hitResult);
+                if (codeFunctionBody.isPresent()) {
+                    if (getSignName.rawIsDown()) ci.cancel();
+                }
             }
         }
     }
