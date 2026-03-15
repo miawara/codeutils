@@ -122,7 +122,7 @@ public final class PlayerOutliner extends Feature implements RenderHUD, Register
 
         if (timestampSpan.getValue() <= 0) {
             timestampSpan.setValue(1.0);
-            Mod.message(timestampSpan.getName() + " set to invalid double -> automatically set to 1.0");
+            Mod.message(timestampSpan.getName() + " set to double <= 0 -> automatically set to 1.0");
         }
         double seconds = timestampSpan.getValue();
         long period = (long) (seconds * 1000);
@@ -131,13 +131,34 @@ public final class PlayerOutliner extends Feature implements RenderHUD, Register
             boolean online = StreamUtils.getPlayerList(false).contains(player);
             int onlineColor = online ? ColorBank.MC_GREEN : ColorBank.MC_RED;
 
-            ArrayList<Long> clicks = playerClicks.getOrDefault(player, new ArrayList<>());
+            ArrayList<Long> clicks = (ArrayList<Long>) playerClicks.getOrDefault(player, new ArrayList<>()).clone();
 
+            long totalDelta = 0L;
+
+            ArrayList<Long> stamps = new ArrayList<>();
             int numClicks = 0;
-            for (long ts : clicks) if (ts + period >= currentTS) numClicks++;
+            for (long ts : clicks) if (ts + period >= currentTS) {
+                long delta = (ts + period) - currentTS;
+                stamps.add(ts);
+                totalDelta += delta;
+                numClicks++;
+            }
 
-            String aps = "" + MathUtils.roundToDecimalPlaces(((double) numClicks) / ((double) seconds), 2);
-            Component playerText = Component.literal(player + " ").withColor(0xed7aff).append(Component.literal(aps + " ").withColor(ColorBank.WHITE_GRAY)).append(Component.literal(online ? "online" : "offline").withColor(onlineColor));
+            double averageDeltaDelta = 0.0;
+            if (stamps.size() > 2) {
+                long totaldiff = 0L;
+                for (int j = 1; j < stamps.size(); j++) {
+                    long diff = stamps.get(j) - stamps.get(j-1);
+                    totaldiff += diff;
+                }
+                averageDeltaDelta = ((double) (totaldiff)) / (stamps.size()-1);
+            }
+
+
+            String aps = "μ:" + MathUtils.roundToDecimalPlaces(((double) numClicks) / ((double) seconds), 2);
+            String sd = "Δ:" + MathUtils.roundToDecimalPlaces(averageDeltaDelta, 1) + "ms";
+
+            Component playerText = Component.literal(player + " ").withColor(0xed7aff).append(Component.literal(aps + " " + sd + " ").withColor(ColorBank.WHITE_GRAY)).append(Component.literal(online ? "online" : "offline").withColor(onlineColor));
             DrawRect playerContainer = new DrawRect(new Point(0,(eachHeight+1) * (i + 1)), new Point(Mod.MC.font.width(playerText.getString()) + (margin + 1) * 2, eachHeight), 0, new ARGB(ColorBank.BLACK, 0.6f), container);
             DrawRect playerContainerSide = new DrawRect(new Point(0,0), new Point(2, playerContainer.getHeight()), 0, new ARGB(onlineColor, 1f), playerContainer);
             DrawText playerTitle = new DrawText(new Point(margin + 2,0), playerText, 0, 1f,false, playerContainer);
