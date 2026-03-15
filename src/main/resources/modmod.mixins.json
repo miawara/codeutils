@@ -9,18 +9,14 @@
     "player.MClientPlayerInteractionManager",
     "player.MLivingEntityRenderer",
     "player.MMinecraftClient",
-    "render.MSignBlockEntity",
-    "render.RenderTypeAccessor"
+    "render.RenderTypeAccessor",
+    "network.MClientConnection",
+    "player.MEntity"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "overwrites": {
     "requireAnnotations": true
-  },
-  "mixins": [
-    "network.MClientConnection",
-    "player.MEntity",
-    "render.MSignBlockEntity"
-	]
+  }
 }

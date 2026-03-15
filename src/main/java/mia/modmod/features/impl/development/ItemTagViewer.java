@@ -1,6 +1,7 @@
 package mia.modmod.features.impl.development;
 
 import mia.modmod.ColorBank;
+import mia.modmod.Mod;
 import mia.modmod.core.KeyBindCategories;
 import mia.modmod.core.KeyBindManager;
 import mia.modmod.core.MiaKeyBind;
@@ -56,6 +57,7 @@ public final class ItemTagViewer extends Feature implements RenderTooltip, Regis
         if (!LocationAPI.getMode().canViewCode()) {
             if (devRestricted.getValue()) return List.of();
         }
+        if (!Mod.MC.hasControlDown()) return List.of();
         Optional<HashMap<String,Tag>> hypercubeTags = new DFItem(item).getHypercubeItemTags(true);
         ArrayList<Component> loreLines = new ArrayList<>();
 
