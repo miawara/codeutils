@@ -4,6 +4,7 @@ import mia.modmod.ColorBank;
 import mia.modmod.Mod;
 import mia.modmod.core.KeyBindCategories;
 import mia.modmod.core.MiaKeyBind;
+import mia.modmod.core.NetworkManager;
 import mia.modmod.features.Categories;
 import mia.modmod.features.Feature;
 import mia.modmod.features.impl.internal.mode.LocationAPI;
@@ -31,6 +32,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.network.protocol.game.ServerboundSetCreativeModeSlotPacket;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -94,11 +96,8 @@ public final class SignPeek extends Feature implements RenderHUD, TickEvent, Pac
                         .build());
                 Inventory inventory = Mod.MC.player.getInventory();
                 int selectedSlot = inventory.getSelectedSlot();
-                if (inventory.getFreeSlot() > 8) {
-                    inventory.setItem(selectedSlot, item);
-                } else {
-                    inventory.add(item);
-                }
+                inventory.setItem(selectedSlot, item);
+                NetworkManager.sendPacket(new ServerboundSetCreativeModeSlotPacket(selectedSlot, item));
                 Mod.message("" + inventory.getSelectedSlot());
             }
         });
