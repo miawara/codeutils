@@ -67,7 +67,7 @@ public final class PlotScanner extends Feature implements PacketListener, TickEv
     ));
 
     public PlotScanner(Categories category){
-        super(category, "Plot Scanner", "plotscanner", "hit netflix tv show pantheon reference?");
+        super(category, "Plot Scanner", "plotscanner", "hit netflix tv show pantheon reference? (kinda works sometimes)");
         plotScanningMode = PlotScanningMode.NONE;
         codeGrabbingMode = CodeGrabbingMode.AVAILABLE;
     }

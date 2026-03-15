@@ -50,8 +50,8 @@ public final class FeatureManager {
         add(new JoinButton(Categories.GENERAL));
         add(new AutoTip(Categories.GENERAL));
         add(new SimplifiedStaffChatTags(Categories.GENERAL));
-        add(new CodeSignColorer(Categories.DEV_EXPERIMENTAL));
-        add(new ChestViewer(Categories.DEV_EXPERIMENTAL));
+        //add(new CodeSignColorer(Categories.DEV_EXPERIMENTAL));
+        //add(new ChestViewer(Categories.DEV_EXPERIMENTAL));
         add(new SignPeek(Categories.DEV_EXPERIMENTAL));
         add(new CPUDisplay(Categories.DEV));
         add(new ItemTagViewer(Categories.DEV));

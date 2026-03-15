@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 public final class PlotLoader extends Feature implements PacketListener, TickEvent, ChatEventListener, RegisterCommandListener {
     public PlotLoader(Categories category) {
-        super(category, "Plot Loader", "plotloader", "Load plots from .plot files");
+        super(category, "Plot Loader", "plotloader", "Load plots from .plot files (doesnt work)");
     }
 
     @Override
