@@ -1,5 +1,4 @@
-## CodeUtils
-![CodeUtils 2: Electric Boogaloo](https://cdn.modrinth.com/data/cached_images/af9f07d6d7200841578cc762b1fe5e402a85e2ff.png)
+## modmod![modmod 2: Electric Boogaloo](https://cdn.modrinth.com/data/cached_images/46870c4c18ee556924bd8cb55d7293470e669ca7.png)
 > another DiamondFire quality-of-life mod designed to make coding, moderation, and support sessions less painful.
 > Also designed to be a less shitty rewrite of CodeClient [Latest Release](https://github.com/firef1a/codeutils/releases)
 

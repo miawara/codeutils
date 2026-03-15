@@ -1,28 +1,28 @@
 {
 	"schemaVersion": 1,
-	"id": "codeutils",
+	"id": "modmod",
 	"version": "${version}",
 	"name": ".modmod",
 	"description": "one person gets meteorclient everyone else has to run",
-	"authors": ["meowara"],
+	"authors": ["miawarajj"],
 	"contact": {
-		"sources": "https://github.com/firef1a/codeutils"
+		"sources": "https://github.com/miawara/modmod"
 	},
 	"license": "MIT",
-	"icon": "assets/codeutils/icon.png",
+	"icon": "assets/modmod/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"client": [
-			"mia.codeutils.Mod"
+			"mia.modmod.Mod"
 		],
 		"modmenu": [
-			"mia.codeutils.ModMenuIntegration"
+			"mia.modmod.ModMenuIntegration"
 		]
 	},
 	"mixins": [
-		"codeutils.mixins.json"
+		"modmod.mixins.json"
 	],
-	"accessWidener" : "codeutils.accesswidener",
+	"accessWidener" : "modmod.accesswidener",
 	"depends": {
 		"fabricloader": ">=0.18.4",
 		"minecraft": "~1.21.11",

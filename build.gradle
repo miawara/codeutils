@@ -56,7 +56,7 @@ dependencies {
 }
 
 loom {
-	accessWidenerPath = file("src/main/resources/codeutils.accesswidener")
+	accessWidenerPath = file("src/main/resources/modmod.accesswidener")
 }
 
 processResources {
