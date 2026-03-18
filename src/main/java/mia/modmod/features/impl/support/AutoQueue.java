@@ -4,6 +4,10 @@ import mia.modmod.features.Categories;
 import mia.modmod.features.Feature;
 import mia.modmod.features.impl.internal.commands.CommandScheduler;
 import mia.modmod.features.impl.internal.commands.ScheduledCommand;
+import mia.modmod.features.impl.internal.permissions.ModeratorPermission;
+import mia.modmod.features.impl.internal.permissions.PermissionTracker;
+import mia.modmod.features.impl.internal.permissions.Permissions;
+import mia.modmod.features.impl.internal.permissions.SupportPermission;
 import mia.modmod.features.listeners.impl.ServerConnectionEventListener;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.Minecraft;
@@ -12,7 +16,7 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 public final class AutoQueue extends Feature implements ServerConnectionEventListener {
 
     public AutoQueue(Categories category) {
-        super(category, "Auto /queue", "autoqueue", "Automatically runs /queue on join.");
+        super(category, "Auto /queue", "autoqueue", "Automatically runs /queue on join.", new Permissions(SupportPermission.HELPER, ModeratorPermission.NONE));
     }
 
     @Override
@@ -32,6 +36,7 @@ public final class AutoQueue extends Feature implements ServerConnectionEventLis
 
     @Override
     public void DFConnectJoin(ClientPacketListener networkHandler) {
+        if (!PermissionTracker.getPermissions().supportPermission().atLeast(SupportPermission.HELPER)) return;
         CommandScheduler.addCommand(new ScheduledCommand("queue"));
     }
 

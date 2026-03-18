@@ -1,14 +1,13 @@
 package mia.modmod.features;
 
 import mia.modmod.features.impl.development.*;
-import mia.modmod.features.impl.development.chest_previewer.ChestViewer;
 import mia.modmod.features.impl.development.scanner.PlotLoader;
 import mia.modmod.features.impl.development.scanner.PlotScanner;
 import mia.modmod.features.impl.general.AutoTip;
 import mia.modmod.features.impl.general.chat.SimplifiedStaffChatTags;
 import mia.modmod.features.impl.general.title.JoinButton;
 import mia.modmod.features.impl.internal.ConfigScreenFeature;
-import mia.modmod.features.impl.internal.PermissionTracker;
+import mia.modmod.features.impl.internal.permissions.PermissionTracker;
 import mia.modmod.features.impl.internal.commands.CommandAliaser;
 import mia.modmod.features.impl.internal.commands.CommandScheduler;
 import mia.modmod.features.impl.internal.mode.LocationAPI;
@@ -46,7 +45,6 @@ public final class FeatureManager {
     }
 
     private static void initFeatures() {
-
         add(new JoinButton(Categories.GENERAL));
         add(new AutoTip(Categories.GENERAL));
         add(new SimplifiedStaffChatTags(Categories.GENERAL));
@@ -69,6 +67,9 @@ public final class FeatureManager {
         add(new PlayerOutliner(Categories.MODERATION));
 
         initInternalFeatures();
+
+        // must be initalized last !!!
+        add(new PermissionTracker(Categories.INTERNAL));
     }
 
     private static void initInternalFeatures() {
@@ -79,9 +80,6 @@ public final class FeatureManager {
         add(new VanishTracker(Categories.INTERNAL));
         add(new LocationAPI(Categories.INTERNAL));
         add(new VerboseLogger(Categories.INTERNAL));
-
-
-        add(new PermissionTracker(Categories.INTERNAL));
     }
 
     private static void add(Feature feature) {

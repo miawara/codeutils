@@ -1,5 +1,6 @@
 package mia.modmod.features;
 
+import mia.modmod.features.impl.internal.permissions.Permissions;
 import mia.modmod.features.listeners.impl.AlwaysEnabled;
 import mia.modmod.features.parameters.ParameterDataField;
 import mia.modmod.features.parameters.ParameterIdentifier;
@@ -12,8 +13,14 @@ public abstract class Feature {
     protected Category category;
     private final ArrayList<ParameterDataField<?>> parameterDataFields;
     private final InternalBooleanDataField enabledParameter;
+    protected final Permissions permissions;
 
     public Feature(Categories category, String name, String id, String description) {
+        this(category, name, id, description, Permissions.NONE);
+    }
+
+    public Feature(Categories category, String name, String id, String description, Permissions permissions) {
+        this.permissions = permissions;
         this.id = id;
         this.name = name;
         this.description = description;
@@ -37,4 +44,6 @@ public abstract class Feature {
     public String getID() { return this.id; }
     public String getName() { return this.name; }
     public String getDescription() { return this.description; }
+
+    public Permissions getRequiredPermissions() { return permissions; }
 }

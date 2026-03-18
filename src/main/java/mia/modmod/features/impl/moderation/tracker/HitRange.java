@@ -9,6 +9,9 @@ import mia.modmod.Mod;
 import mia.modmod.features.Categories;
 import mia.modmod.features.Feature;
 import mia.modmod.features.FeatureManager;
+import mia.modmod.features.impl.internal.permissions.ModeratorPermission;
+import mia.modmod.features.impl.internal.permissions.Permissions;
+import mia.modmod.features.impl.internal.permissions.SupportPermission;
 import mia.modmod.features.impl.internal.staff.VanishTracker;
 import mia.modmod.mixin.render.RenderTypeAccessor;
 import mia.modmod.render.util.ARGB;
@@ -30,7 +33,7 @@ import java.util.Locale;
 
 public final class HitRange extends Feature {
     public HitRange(Categories category) {
-        super(category, "Hit Range", "hitrange", "shows player hit range");
+        super(category, "Hit Range", "hitrange", "shows player hit range", new Permissions(SupportPermission.NONE, ModeratorPermission.JR_MOD));
     }
 
     public static final RenderType QUADS = makeType(RenderPipelines.DEBUG_QUADS, null);

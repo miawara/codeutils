@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import mia.modmod.Mod;
 import mia.modmod.features.Categories;
 import mia.modmod.features.Feature;
+import mia.modmod.features.impl.internal.permissions.Permissions;
 import mia.modmod.features.listeners.impl.AlwaysEnabled;
 import mia.modmod.features.listeners.impl.RegisterCommandListener;
 import mia.modmod.features.listeners.impl.RenderHUD;

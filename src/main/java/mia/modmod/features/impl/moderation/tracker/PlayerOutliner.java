@@ -9,6 +9,9 @@ import mia.modmod.core.StreamUtils;
 import mia.modmod.features.Categories;
 import mia.modmod.features.Feature;
 import mia.modmod.features.FeatureManager;
+import mia.modmod.features.impl.internal.permissions.ModeratorPermission;
+import mia.modmod.features.impl.internal.permissions.Permissions;
+import mia.modmod.features.impl.internal.permissions.SupportPermission;
 import mia.modmod.features.impl.internal.server.ServerManager;
 import mia.modmod.features.listeners.impl.*;
 import mia.modmod.features.parameters.ParameterIdentifier;
@@ -51,7 +54,7 @@ public final class PlayerOutliner extends Feature implements RenderHUD, Register
     private static DoubleDataField timestampSpan;
 
     public PlayerOutliner(Categories category) {
-        super(category, "Player Outliner", "outliner", "Outlines tracked players like a gay CCTV camera.");
+        super(category, "Player Outliner", "outliner", "outlines tracked players", new Permissions(SupportPermission.NONE, ModeratorPermission.JR_MOD));
         trackedPlayers = new ArrayList<>();
         playerColors = new LinkedHashMap<>();
         playerClicks = new HashMap<>();
@@ -155,7 +158,7 @@ public final class PlayerOutliner extends Feature implements RenderHUD, Register
             }
 
 
-            String aps = "μ:" + MathUtils.roundToDecimalPlaces(((double) numClicks) / ((double) seconds), 2);
+            String aps = "μ:" + MathUtils.roundToDecimalPlaces(((double) numClicks) / seconds, 2);
             String sd = "Δ:" + MathUtils.roundToDecimalPlaces(averageDeltaDelta, 1) + "ms";
 
             Component playerText = Component.literal(player + " ").withColor(0xed7aff).append(Component.literal(aps + " " + sd + " ").withColor(ColorBank.WHITE_GRAY)).append(Component.literal(online ? "online" : "offline").withColor(onlineColor));

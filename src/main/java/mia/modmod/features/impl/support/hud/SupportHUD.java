@@ -5,6 +5,9 @@ import mia.modmod.Mod;
 import mia.modmod.core.MathUtils;
 import mia.modmod.features.Categories;
 import mia.modmod.features.Feature;
+import mia.modmod.features.impl.internal.permissions.ModeratorPermission;
+import mia.modmod.features.impl.internal.permissions.Permissions;
+import mia.modmod.features.impl.internal.permissions.SupportPermission;
 import mia.modmod.features.listeners.ModifiableEventData;
 import mia.modmod.features.listeners.ModifiableEventResult;
 import mia.modmod.features.listeners.impl.ChatEventListener;
@@ -42,7 +45,7 @@ public final class SupportHUD extends Feature implements RenderHUD, ChatEventLis
     private static DrawRect supportHUDContainer;
 
     public SupportHUD(Categories category) {
-        super(category, "Support HUD", "supporthud", "get back to work wageslave, put on that customer service smile and earn those sparks!");
+        super(category, "Support HUD", "supporthud", "get back to work wageslave, put on that customer service smile and earn those sparks!", new Permissions(SupportPermission.HELPER, ModeratorPermission.NONE));
 
     }
 

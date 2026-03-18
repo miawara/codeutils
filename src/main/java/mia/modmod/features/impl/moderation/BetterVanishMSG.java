@@ -5,6 +5,9 @@ import mia.modmod.features.Categories;
 import mia.modmod.features.Feature;
 import mia.modmod.features.FeatureManager;
 import mia.modmod.features.impl.general.chat.SimplifiedStaffChatTags;
+import mia.modmod.features.impl.internal.permissions.ModeratorPermission;
+import mia.modmod.features.impl.internal.permissions.Permissions;
+import mia.modmod.features.impl.internal.permissions.SupportPermission;
 import mia.modmod.features.listeners.ModifiableEventData;
 import mia.modmod.features.listeners.ModifiableEventResult;
 import mia.modmod.features.listeners.impl.ChatEventListener;
@@ -16,7 +19,7 @@ import java.util.regex.Pattern;
 
 public final class BetterVanishMSG extends Feature implements ChatEventListener {
     public BetterVanishMSG(Categories category) {
-        super(category, "Better Vanish MSG", "vanishmsgs", "Changes vanish messages.");
+        super(category, "Better Vanish MSG", "vanishmsgs", "Changes vanish messages.", new Permissions(SupportPermission.NONE, ModeratorPermission.JR_MOD));
     }
 
     @Override

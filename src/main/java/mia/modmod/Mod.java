@@ -129,6 +129,14 @@ public class Mod implements ClientModInitializer {
 
 	}
 
+	public static void rawMessage(Component message) {
+		if (Mod.MC.player == null) return;
+		Mod.MC.execute(() -> {
+			Mod.MC.player.displayClientMessage(message, false);
+		});
+
+	}
+
 	public static void message(Component message) {
 		message(message, ColorBank.MIA_PURPLE, ColorBank.WHITE);
 	}
