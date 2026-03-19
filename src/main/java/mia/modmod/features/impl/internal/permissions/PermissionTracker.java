@@ -44,15 +44,10 @@ public final class PermissionTracker extends Feature implements ServerConnection
                                 String serializedBadges = matcher.group(3);
                                 String serializedJoinData = matcher.group(4);
 
-                                Mod.message(name);
-                                Mod.message(serializedRanks);
-                                Mod.message(serializedBadges);
-                                Mod.message(serializedJoinData);
 
                                 ArrayList<DFRank> ranks = new ArrayList<>();
 
                                 if (name.equals(Mod.getPlayerName())) {
-                                    Mod.message("true");
                                     for (DFRank rank : DFRank.values()) {
                                         if (serializedRanks.contains(rank.matcher)) {
                                             ranks.add(rank);
@@ -141,13 +136,13 @@ public final class PermissionTracker extends Feature implements ServerConnection
         Mod.rawMessage(Component.empty());
         Mod.message(Component.literal("Detected the following ranks:"));
         for (DFRank rank : DFRanksData.getValue()) {
-            Mod.message(Component.literal(" - ").withColor(ColorBank.MC_GRAY).append(Component.literal(rank.matcher).withColor(ColorBank.WHITE_GRAY)));
+            Mod.message(Component.literal(rank.matcher).withColor(ColorBank.MC_GRAY));
         }
         Mod.rawMessage(Component.empty());
         Mod.message(Component.literal("Support Permissions - ").append(Component.literal(permissions.supportPermission().name()).withColor(0x69afff)));
         Mod.message(Component.literal("Moderator Permissions - ").append(Component.literal(permissions.moderatorPermission().name()).withColor(0x85ff75)));
 
-        Mod.message("If the following permissions / ranks are incorrect, you may set them manually with /add_rank and /del_rank");
+        Mod.message("If the following permissions / ranks are incorrect, you may set them manually with /rank <add/del/list> <rank>");
         Mod.rawMessage(Component.empty());
         if (!permissions.equals(Permissions.NONE)) {
             Mod.message("The following features have been enabled due to your permissions: ");
@@ -156,7 +151,8 @@ public final class PermissionTracker extends Feature implements ServerConnection
                 if (permissions.supportPermission().atLeast(requiredPermissions.supportPermission()) && permissions.moderatorPermission().atLeast(requiredPermissions.moderatorPermission()) &&
                         !(requiredPermissions.supportPermission().equals(SupportPermission.NONE) &&  requiredPermissions.moderatorPermission().equals(ModeratorPermission.NONE))
                 ) {
-                    Mod.message(Component.literal(" - ").withColor(ColorBank.MC_GRAY).append(Component.literal(feature.getName()).withColor(ColorBank.WHITE)));
+                    Mod.message(Component.literal(feature.getName()).withColor(ColorBank.MC_GRAY));
+                    feature.setEnabled(true);
                 }
             }
         }
@@ -165,7 +161,7 @@ public final class PermissionTracker extends Feature implements ServerConnection
     private static void confirmError() {
         Mod.error("Failed to grab /profile information...");
         Mod.error("Run /validate_permissions or relog to try again...");
-        Mod.error("Ranks may be manually set as well via /add_rank and /del_rank");
+        Mod.error("Ranks may be manually set as well via /rank <add/del/list> <rank>");
     }
 
     private void requestPlayerRanks() {
