@@ -36,7 +36,6 @@ public final class AutoQueue extends Feature implements ServerConnectionEventLis
 
     @Override
     public void DFConnectJoin(ClientPacketListener networkHandler) {
-        if (!PermissionTracker.getPermissions().supportPermission().atLeast(SupportPermission.HELPER)) return;
         CommandScheduler.addCommand(new ScheduledCommand("queue"));
     }
 

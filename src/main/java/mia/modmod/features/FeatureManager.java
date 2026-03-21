@@ -68,7 +68,7 @@ public final class FeatureManager {
 
         initInternalFeatures();
 
-        // must be initalized last !!!
+        // must be initialized last !!!
         add(new PermissionTracker(Categories.INTERNAL));
     }
 

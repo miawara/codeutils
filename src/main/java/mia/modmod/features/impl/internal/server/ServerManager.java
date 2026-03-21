@@ -15,12 +15,19 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.login.ClientboundHelloPacket;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.List;
+import java.util.regex.Pattern;
+
 public final class ServerManager extends Feature implements ServerConnectionEventListener, PacketListener, AlwaysEnabled {
     public static RecognizedServers currentServer = RecognizedServers.NONE;
     public static ServerConnectionStatus connectionStatus = ServerConnectionStatus.NONE;
 
+    private static final String[] UNOFFICIAL_ADDRESSES = { "luke.cash", "reason.codes" };
+    private static final Pattern ADDRESS_PATTERN = Pattern.compile("^(?:(?:(?:.{1,50}\\.|)mcdiamondfire\\.(?:games|net|com|" + String.join("|", UNOFFICIAL_ADDRESSES) + "))|54\\.39\\.29\\.75)(?::[0-9]{1,5}|)$");
+
     public ServerManager(Categories category) {
         super(category,"Server Manager", "server_manager", "Detects and executes features when you join and leave DF. Will literally brick every other feature if disabled.");
+
     }
 
     public static boolean isNotOnDiamondFire() { return !isOnDiamondFire(); }
@@ -74,12 +81,7 @@ public final class ServerManager extends Feature implements ServerConnectionEven
 
     public static RecognizedServers recognizeServer(ServerData server) {
         String serverAddress = server.ip;
-        if (
-                serverAddress.contains("mcdiamondfire.com") ||
-                        serverAddress.contains("mcdiamondfire.net") ||
-                        serverAddress.contains("54.39.29.75") ||
-                        serverAddress.contains("diamondfire.games")
-        ) return RecognizedServers.DIAMONDFIRE;
+        if (ADDRESS_PATTERN.matcher(serverAddress).find()) return RecognizedServers.DIAMONDFIRE;
         return RecognizedServers.NONE;
     }
 }
