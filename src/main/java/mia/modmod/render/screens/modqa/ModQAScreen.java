@@ -226,7 +226,7 @@ public class ModQAScreen extends Screen {
         updateAnimation();
     }
     private enum PunishmentType {
-        WARN("warn", Component.literal("[B]").withColor(0xffd942)),
+        WARN("warn", Component.literal("[W]").withColor(0xffd942)),
         MUTE("mute", Component.literal("[M]").withColor(ColorBank.MC_GREEN)),
         BAN("ban", Component.literal("[B]").withColor(ColorBank.MC_RED));
 
