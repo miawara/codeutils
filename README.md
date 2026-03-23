@@ -1,13 +1,10 @@
 ## modmod
-> DiamondFire quality of life mod for support and moderation staff.
+> DiamondFire quality of life mod for support and moderation staff. This is specifically tailored for DF staff, so you won't get much utility out of it if you aren't a DF staff member.<br>
+> [How to use this mod](https://github.com/miawara/modmod/wiki)
 
+### Latest Release
 > [Latest Release](https://github.com/miawara/modmod/releases)
 
-
-## Features
-> Has a handful of very specific features mostly designed for DF staff but also includes some random quality of life features for plot developers.
-
-![qa screen](https://github.com/miawara/modmod/blob/master/src/main/resources/assets/modmod/readme/qascreen.png?raw=true)
 
 ## Commands
 - /track <player/clear>
