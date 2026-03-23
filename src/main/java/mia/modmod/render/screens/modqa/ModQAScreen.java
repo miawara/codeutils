@@ -16,11 +16,9 @@ import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
+import org.jspecify.annotations.NonNull;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ModQAScreen extends Screen {
     private final PlayerOutliner playerOutliner;
@@ -264,7 +262,7 @@ public class ModQAScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
+    public void render(@NonNull GuiGraphics context, int mouseX, int mouseY, float delta) {
         if (parent != null) parent.render(context, Integer.MIN_VALUE, Integer.MIN_VALUE, delta);
         //this.renderBlurredBackground(context);
         if (firstMousePosition == null) {
@@ -280,11 +278,11 @@ public class ModQAScreen extends Screen {
 
 
     @Override
-    public void renderBackground(GuiGraphics context, int mouseX, int mouseY, float delta) { }
+    public void renderBackground(@NonNull GuiGraphics context, int mouseX, int mouseY, float delta) { }
 
 
     @Override
-    public boolean mouseClicked(MouseButtonEvent click, boolean doubled) {
+    public boolean mouseClicked(@NonNull MouseButtonEvent click, boolean doubled) {
         // to prevent accidentally clicking the first button option when you open screen
         if (!hasMovedCursor) return false;
         for (DrawButton button : buttons) {
@@ -294,23 +292,23 @@ public class ModQAScreen extends Screen {
     }
 
     @Override
-    public boolean mouseReleased(MouseButtonEvent click) {
+    public boolean mouseReleased(@NonNull MouseButtonEvent click) {
         return super.mouseReleased(click);
     }
 
     @Override
-    public boolean mouseDragged(MouseButtonEvent click, double offsetX, double offsetY) {
+    public boolean mouseDragged(@NonNull MouseButtonEvent click, double offsetX, double offsetY) {
         return super.mouseDragged(click, offsetX, offsetY);
     }
 
     @Override
-    public boolean charTyped(CharacterEvent input) {
+    public boolean charTyped(@NonNull CharacterEvent input) {
         return super.charTyped(input);
     }
 
 
     @Override
-    public boolean keyPressed(KeyEvent input) {
+    public boolean keyPressed(@NonNull KeyEvent input) {
         return super.keyPressed(input);
     }
 

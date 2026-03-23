@@ -1,37 +1,28 @@
 package mia.modmod.features.impl.moderation.tracker;
 
-import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import mia.modmod.Mod;
 import mia.modmod.features.Categories;
 import mia.modmod.features.Feature;
 import mia.modmod.features.FeatureManager;
 import mia.modmod.features.impl.internal.staff.VanishTracker;
 import mia.modmod.features.parameters.ParameterIdentifier;
-import mia.modmod.features.parameters.impl.ColorDataField;
 import mia.modmod.features.parameters.impl.FloatDataField;
 import mia.modmod.features.parameters.impl.IntegerDataField;
 import mia.modmod.mixin.render.RenderTypeAccessor;
 import mia.modmod.render.util.ARGB;
-import mia.modmod.render.util.Point;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.rendertype.LayeringTransform;
 import net.minecraft.client.renderer.rendertype.RenderSetup;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.jspecify.annotations.Nullable;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
