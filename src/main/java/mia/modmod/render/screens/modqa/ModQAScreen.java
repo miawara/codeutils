@@ -8,10 +8,7 @@ import mia.modmod.render.screens.Animation;
 import mia.modmod.render.screens.AnimationStage;
 import mia.modmod.render.util.*;
 import mia.modmod.render.util.Point;
-import mia.modmod.render.util.elements.DrawButton;
-import mia.modmod.render.util.elements.DrawObject;
-import mia.modmod.render.util.elements.DrawRect;
-import mia.modmod.render.util.elements.DrawText;
+import mia.modmod.render.util.elements.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -67,6 +64,7 @@ public class ModQAScreen extends Screen {
         mainContainer.setSelfBinding(new DrawBinding(AxisBinding.MIDDLE, AxisBinding.MIDDLE));
 
         DrawRect sidebarContainer = new DrawRect(Point.ZERO, new Point(100, mainContainerHeight), 0, new ARGB(mainColor, 0.4f * animation.getProgress()), mainContainer);
+        final DrawCustomToolTip[] customToolTip = new DrawCustomToolTip[1];
 
 
         int playerNameMargin = 4;
@@ -197,7 +195,7 @@ public class ModQAScreen extends Screen {
                             context.disableScissor();
                             if (containsPoint(mouseX, mouseY)) {
                                 //DrawContextHelper.drawTooltip(context, optionInfo, mouseX, mouseY, 0);
-                                context.setComponentTooltipForNextFrame(Mod.MC.font, optionInfo, mouseX, mouseY);
+                                customToolTip[0] = new DrawCustomToolTip(new Point(mouseX, mouseY), optionInfo, 0, 0);
                             }
                         }
                     };
@@ -212,7 +210,6 @@ public class ModQAScreen extends Screen {
                     });
                     buttons.add(optionButton);
                     optionButton.setParentBinding(new DrawBinding(AxisBinding.NONE, AxisBinding.FULL));
-                    Component text = Component.literal(option.reason);
                     DrawText optionText = new DrawText(
                             new Point(playerNameMargin, 0),
                             optionName,
@@ -239,6 +236,7 @@ public class ModQAScreen extends Screen {
         }
 
         mainContainer.render(context, mouseX, mouseY);
+        if (customToolTip[0] != null) customToolTip[0].render(context, mouseX, mouseY);
         updateAnimation();
     }
     private enum PunishmentType {

@@ -3,6 +3,7 @@ package mia.modmod.mixin.player;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mia.modmod.features.FeatureManager;
 import mia.modmod.features.impl.moderation.tracker.HitRange;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;

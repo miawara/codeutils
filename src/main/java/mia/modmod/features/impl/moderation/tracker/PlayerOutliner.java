@@ -1,12 +1,9 @@
 package mia.modmod.features.impl.moderation.tracker;
 
-import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import it.unimi.dsi.fastutil.Hash;
 import mia.modmod.ColorBank;
 import mia.modmod.Mod;
-import mia.modmod.core.MathUtils;
 import mia.modmod.core.StreamUtils;
 import mia.modmod.features.Categories;
 import mia.modmod.features.Feature;
@@ -17,7 +14,7 @@ import mia.modmod.features.impl.internal.permissions.SupportPermission;
 import mia.modmod.features.impl.internal.server.ServerManager;
 import mia.modmod.features.listeners.impl.*;
 import mia.modmod.features.parameters.ParameterIdentifier;
-import mia.modmod.features.parameters.impl.DoubleDataField;
+import mia.modmod.features.parameters.impl.ColorDataField;
 import mia.modmod.render.util.*;
 import mia.modmod.render.util.Point;
 import mia.modmod.render.util.elements.DrawRect;
@@ -26,53 +23,33 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.PlayerSkinWidget;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.player.PlayerModel;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.state.EntityRenderState;
-import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.PlayerSkin;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import net.minecraft.network.protocol.game.ClientboundAnimatePacket;
 
 import java.awt.*;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-import net.kyori.adventure.text.serializer.ComponentSerializer;
-
 public final class PlayerOutliner extends Feature implements RenderHUD, RegisterCommandListener, ServerConnectionEventListener, WorldRenderEventListener, PacketListener {
     private final ArrayList<String> trackedPlayers;
+    private final ColorDataField outlinerColor;
 
     public PlayerOutliner(Categories category) {
         super(category, "Player Outliner", "outliner", "outlines tracked players", new Permissions(SupportPermission.NONE, ModeratorPermission.JR_MOD));
+        outlinerColor = new ColorDataField("Outline Color", new ParameterIdentifier(this, "outline_color"), new Color(0xed7aff), true);
         trackedPlayers = new ArrayList<>();
-
     }
 
     @Override
@@ -202,7 +179,7 @@ public final class PlayerOutliner extends Feature implements RenderHUD, Register
         int boundingWidth = (int) (screenBoundingBox.getXsize() + margin * 2);
         int boundingHeight = (int) (screenBoundingBox.getYsize() + margin * 2);
 
-        int purpleInt = 0xed7aff;
+        int purpleInt = outlinerColor.getRGB();
         ARGB fadedPurple = new ARGB(purpleInt, 0.8f);
         boolean isRainbow = false;
 

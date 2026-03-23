@@ -9,12 +9,14 @@ import mia.modmod.Mod;
 import mia.modmod.features.Categories;
 import mia.modmod.features.Feature;
 import mia.modmod.features.FeatureManager;
-import mia.modmod.features.impl.internal.permissions.ModeratorPermission;
-import mia.modmod.features.impl.internal.permissions.Permissions;
-import mia.modmod.features.impl.internal.permissions.SupportPermission;
 import mia.modmod.features.impl.internal.staff.VanishTracker;
+import mia.modmod.features.parameters.ParameterIdentifier;
+import mia.modmod.features.parameters.impl.ColorDataField;
+import mia.modmod.features.parameters.impl.FloatDataField;
+import mia.modmod.features.parameters.impl.IntegerDataField;
 import mia.modmod.mixin.render.RenderTypeAccessor;
 import mia.modmod.render.util.ARGB;
+import mia.modmod.render.util.Point;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.rendertype.LayeringTransform;
@@ -25,16 +27,34 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.jspecify.annotations.Nullable;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
 public final class HitRange extends Feature {
+    private final IntegerDataField segmentParameter;
+    private final FloatDataField rangeThicknessParameter;
+
     public HitRange(Categories category) {
-        super(category, "Hit Range", "hitrange", "shows player hit range (use this as a reference since its somewhat inaccurate and you can hit outside of the range due to lag)", new Permissions(SupportPermission.NONE, ModeratorPermission.JR_MOD));
+        super(category, "Hit Range", "hitrange", "shows player hit range");
+
+        segmentParameter = new IntegerDataField("Segments", new ParameterIdentifier(this, "segments"), 100, true);
+        rangeThicknessParameter = new FloatDataField("Thickness", new ParameterIdentifier(this, "thickness"), 0.055f, true);
     }
+
+    public static final RenderType QUADS = RenderTypeAccessor.of(
+            RenderPipelines.DEBUG_QUADS.getClass().getSimpleName().toLowerCase(Locale.ROOT),
+            RenderSetup.builder(RenderPipelines.DEBUG_QUADS)
+                .sortOnUpload()
+                .useLightmap()
+                .useOverlay()
+                .setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
+                .createRenderSetup()
+        );
 
     public static void drawCircle(PoseStack.Pose entry, VertexConsumer vertices, AvatarRenderState state) {
         if (Mod.MC.player == null) return;
@@ -77,45 +97,66 @@ public final class HitRange extends Feature {
         }
 
         int color = ARGB.getARGB(isInRange ? 0x7aff5c : 0xff473d, 1f);
-        float dy = (state.isDiscrete ? 0.125f : 0);
 
-        drawCircleQuad(
-                computeQuads(100, playerRange, 0.05f),
-                entry, vertices, dy, color
+        renderCircle(
+                entry,
+                vertices,
+                FeatureManager.getFeature(HitRange.class).segmentParameter.getValue(),
+                player.entityInteractionRange(),
+                FeatureManager.getFeature(HitRange.class).rangeThicknessParameter.getValue(),
+                color
         );
     }
 
-
-    private static void drawCircleQuad(ArrayList<Angle> angles, PoseStack.Pose entry, VertexConsumer vertices, float dy, int argb) {
-        Matrix4f positionMatrix = entry.pose();
-        for (int i = 1; i < angles.size() + 1; i++) {
-            Angle angle = angles.get(i % angles.size());
-            Angle prevAngle = angles.get(i - 1);
-
-            vertices.addVertex(positionMatrix, prevAngle.dx, dy, prevAngle.dz).setColor(argb).setNormal(entry, 0.0f, 0.0f, 0.0f);
-            vertices.addVertex(positionMatrix, prevAngle.farDx, dy, prevAngle.farDz).setColor(argb).setNormal(entry, 0.0f, 0.0f, 0.0f);
-            vertices.addVertex(positionMatrix, angle.farDx, dy, angle.farDz).setColor(argb).setNormal(entry, 0.0f, 0.0f, 0.0f);
-            vertices.addVertex(positionMatrix, angle.dx, dy, angle.dz).setColor(argb).setNormal(entry, 0.0f, 0.0f, 0.0f);
-        }
-    }
-
-    private static ArrayList<Angle> computeQuads(int segments, float radius, float thickness) {
-        ArrayList<Angle> angles = new ArrayList<>();
+    private static void renderCircle( PoseStack.Pose pose, VertexConsumer vertexConsumer, int segments, double radius, double thickness, int color) {
+        float dy = 0.125f;
 
         for (int i = 0; i < segments; i++) {
-            float angle = 2.0f * Mth.PI * ((float) i / segments);
-            float dst = radius - (thickness / 2);
+            double angle0 = ((i + 0f) / segments) * Math.PI * 2;
+            double angle1 = ((i + 1f) / segments) * Math.PI * 2;
 
-            float dx = dst * Mth.sin(angle);
-            float dz = dst * Mth.cos(angle);
+            Quad quad = new AngleQuad(angle0, angle1, radius, thickness, dy).generateQuad();
 
-            float farDx = (dst + thickness) * Mth.sin(angle);
-            float farDz = (dst + thickness) * Mth.cos(angle);
-
-            angles.add(new Angle(dx, dz, farDx, farDz));
+            for (Vector3f vector3f : quad.getVertices()) {
+                vertexConsumer.addVertex(pose, vector3f).setColor(color).setNormal(pose, new Vector3f(0, 1, 0));
+            }
         }
-        return angles;
     }
 
-    private record Angle(float dx, float dz, float farDx, float farDz) { }
+    private record AngleQuad(double angle0, double angle1, double radius, double thickness, float dy) {
+        public Quad generateQuad() {
+            double innerRadius = radius - thickness;
+            return new Quad(
+                    dy,
+                    (float) (Math.cos(angle1) * radius),
+                    (float) (Math.sin(angle1) * radius),
+
+
+                    (float) (Math.cos(angle1) * innerRadius),
+                    (float) (Math.sin(angle1) * innerRadius),
+
+                    (float) (Math.cos(angle0) * innerRadius),
+                    (float) (Math.sin(angle0) * innerRadius),
+
+                    (float) (Math.cos(angle0) * radius),
+                    (float) (Math.sin(angle0) * radius)
+            );
+        }
+    }
+
+    private record Quad(float dy, float x0, float y0, float x1, float y1, float x2, float y2, float x3, float y3) {
+        public Vector3f getTL()  {return new Vector3f(x0, dy, y0); }
+        public Vector3f getBL()  {return new Vector3f(x1, dy, y1); }
+        public Vector3f getBR()  {return new Vector3f(x2, dy, y2); }
+        public Vector3f getTR()  {return new Vector3f(x3, dy, y3); }
+
+        public Vector3f[] getVertices() {
+            return new Vector3f[]{
+                    getTL(),
+                    getBL(),
+                    getBR(),
+                    getTR()
+            };
+        }
+    };
 }

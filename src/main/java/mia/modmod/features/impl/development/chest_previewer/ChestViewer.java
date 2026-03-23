@@ -5,7 +5,7 @@ import com.google.gson.JsonParser;
 import mia.modmod.Mod;
 import mia.modmod.core.InventoryHelper;
 import mia.modmod.core.NetworkManager;
-import mia.modmod.core.items.DFItem;
+import mia.modmod.core.items.MDFItem;
 import mia.modmod.features.Categories;
 import mia.modmod.features.Feature;
 import mia.modmod.features.impl.internal.mode.LocationAPI;
@@ -54,8 +54,8 @@ public final class ChestViewer extends Feature implements RenderHUD, PacketListe
 
         if (packet instanceof ClientboundContainerSetSlotPacket slot && expectingChestData) {
             Mod.MC.execute(() -> {
-                DFItem item = DFItem.of(slot.getItem());
-                ItemContainerContents container = item.getContainer();
+                MDFItem item = new MDFItem(slot.getItem());
+                ItemContainerContents container = item.getItemContainerContents();
                 if (container == null) return;
                 ArrayList<ItemStack> items = new ArrayList<>();
                 container.nonEmptyItems().forEach(items::add);
@@ -118,14 +118,14 @@ public final class ChestViewer extends Feature implements RenderHUD, PacketListe
         } else {
             texts.add(Component.literal(items.size() + " Argument" + ((items.size() > 1) ? "s" : "")).withStyle(ChatFormatting.GOLD));
             for (ItemStack item : items) {
-                DFItem dfItem = DFItem.of(item);
+                MDFItem dfItem = new MDFItem(item);
                 List<Component> currentLore = dfItem.getLore();
                 ArrayList<Component> lore = new ArrayList<>(currentLore);
 
 
                 MutableComponent text = Component.empty();
                 text.append(Component.literal(" • ").withStyle(ChatFormatting.DARK_GRAY));
-                Optional<String> varItem = dfItem.getHypercubeStringValue("varitem");
+                Optional<String> varItem = dfItem.getHypercubeValue("varitem").get().asString();
                 if (varItem.isEmpty()) {
                     text.append(item.getCount() + "x ");
                     text.append(item.getHoverName());
