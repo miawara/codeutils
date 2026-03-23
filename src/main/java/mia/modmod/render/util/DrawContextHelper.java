@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.PlayerSkin;
+import org.joml.Vector3f;
 
 import java.util.List;
 
@@ -32,6 +33,8 @@ public class DrawContextHelper {
 
     // yAnchor: a value of 0.5 will center it around y and a value of 1 will make it render above y
     public static void drawTooltip(GuiGraphics context, List<Component> list, int x, int y, float yAnchor) {
+        context.pose().pushMatrix();
+        context.pose().transform(new Vector3f(0,0,-100));
         int baseWidth = 0;
         int baseHeight = (list.size() * Mod.MC.font.lineHeight) + ((list.size()-1) * 2);
         for (Component text : list) {

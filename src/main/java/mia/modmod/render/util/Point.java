@@ -41,4 +41,6 @@ public class Point {
         return new Point(point.x() * x, point.y() * y);
     }
 
+    public boolean equals(Point point) { return point.x == x() && point.y == y(); }
+
 }

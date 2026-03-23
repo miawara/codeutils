@@ -29,6 +29,7 @@ import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,8 +37,8 @@ import java.util.regex.Pattern;
 public final class SupportHUD extends Feature implements RenderHUD, ChatEventListener, ServerConnectionEventListener, TickEvent {
     private static final String queueHeader = "» Current Queue:";
 
-    private static final LinkedHashMap<String, SessionEntry> sessionQueue = new LinkedHashMap<>();
-    private static final LinkedHashMap<String, SupportQuestionEntry> questionQueue = new LinkedHashMap<>();
+    private static final HashMap<String, SessionEntry> sessionQueue = new HashMap<>();
+    private static final HashMap<String, SupportQuestionEntry> questionQueue = new HashMap<>();
 
     private static SessionEntry currentSupportSession = null;
     private static SessionEntry sessionBuilder;
@@ -89,8 +90,8 @@ public final class SupportHUD extends Feature implements RenderHUD, ChatEventLis
         if (matcher.find()) {
             String supportName = matcher.group(1);
             String supporteeName = matcher.group(2);
-            //Mod.log(matcher.group(1) + " " + playerName);
             if (supportName.equals(playerName)) {
+                Mod.message(sessionQueue.toString());
                 currentSupportSession = sessionQueue.getOrDefault(supporteeName, new SessionEntry(supporteeName, "failed to grab reason :/", System.currentTimeMillis()));
                 currentSupportSession.timestamp = System.currentTimeMillis();
             }
