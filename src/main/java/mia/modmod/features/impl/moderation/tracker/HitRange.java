@@ -33,15 +33,7 @@ import java.util.Locale;
 
 public final class HitRange extends Feature {
     public HitRange(Categories category) {
-        super(category, "Hit Range", "hitrange", "shows player hit range", new Permissions(SupportPermission.NONE, ModeratorPermission.JR_MOD));
-    }
-
-    public static final RenderType QUADS = makeType(RenderPipelines.DEBUG_QUADS, null);
-
-    private static final Int2ObjectMap<RenderType> PLAYER_TRIANGLE_FANS = new Int2ObjectOpenHashMap<>();
-
-    public static RenderType getCurrentType(AvatarRenderState state) {
-        return QUADS;
+        super(category, "Hit Range", "hitrange", "shows player hit range (use this as a reference since its somewhat inaccurate and you can hit outside of the range due to lag)", new Permissions(SupportPermission.NONE, ModeratorPermission.JR_MOD));
     }
 
     public static void drawCircle(PoseStack.Pose entry, VertexConsumer vertices, AvatarRenderState state) {
@@ -55,11 +47,7 @@ public final class HitRange extends Feature {
                     playerIds.put(player.getId(), player);
                 }
             }
-
         }
-
-        //Mod.message(trackedName + " " + playerEntity.nameAndId().name());
-        //Vec3 eyePosition = playerEntity.getEyePosition();
 
         int playerId = state.id;
         if (!playerIds.containsKey(playerId)) return;
@@ -127,21 +115,6 @@ public final class HitRange extends Feature {
             angles.add(new Angle(dx, dz, farDx, farDz));
         }
         return angles;
-    }
-
-
-    private static RenderType makeType(RenderPipeline pipeline, @Nullable String postfix) {
-        String name = "hitrange_" + pipeline.getClass().getSimpleName().toLowerCase(Locale.ROOT);
-        if (postfix != null) name += "_" + postfix;
-
-        RenderSetup setup = RenderSetup.builder(pipeline)
-                .sortOnUpload()
-                .useLightmap()
-                .useOverlay()
-                .setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
-                .createRenderSetup();
-
-        return RenderTypeAccessor.of(name, setup);
     }
 
     private record Angle(float dx, float dz, float farDx, float farDz) { }

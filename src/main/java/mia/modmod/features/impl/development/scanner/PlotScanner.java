@@ -5,7 +5,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import mia.modmod.ColorBank;
 import mia.modmod.Mod;
 import mia.modmod.core.*;
-import mia.modmod.core.items.DFItem;
+import mia.modmod.core.items.MDFItem;
 import mia.modmod.features.Categories;
 import mia.modmod.features.Feature;
 import mia.modmod.features.impl.internal.commands.ChatConsumer;
@@ -240,7 +240,7 @@ public final class PlotScanner extends Feature implements PacketListener, TickEv
         // receive codetemplate
         if (codeGrabbingMode.equals(CodeGrabbingMode.AWAIT_GRAB_TEMPLATE)) {
             if (packet instanceof ClientboundContainerSetSlotPacket slot) {
-                Optional<HashMap<String, Tag>> hypercubeTags = new DFItem(slot.getItem()).getHypercubeItemTags(false);
+                Optional<HashMap<String, Tag>> hypercubeTags = new MDFItem(slot.getItem()).getHypercubeItemTags(false);
                 if (hypercubeTags.isPresent()) {
                    HashMap<String, Tag> tags = hypercubeTags.get();
                    if (tags.containsKey("codetemplatedata")) {
