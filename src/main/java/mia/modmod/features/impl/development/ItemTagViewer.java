@@ -5,7 +5,6 @@ import mia.modmod.Mod;
 import mia.modmod.core.KeyBindCategories;
 import mia.modmod.core.KeyBindManager;
 import mia.modmod.core.MiaKeyBind;
-import mia.modmod.core.items.DFItem;
 import mia.modmod.core.items.MDFItem;
 import mia.modmod.features.Categories;
 import mia.modmod.features.Feature;
