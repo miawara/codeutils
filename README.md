@@ -19,4 +19,5 @@
 > report bugs on discord or github
 
 ## Contributions
-> Uses code from https://github.com/DFOnline/CodeClient for the code spectate code viewer
+> Uses code from https://github.com/DFOnline/CodeClient for code chest viewer (deprecated)
+> Heavy inspiration from https://github.com/uku3lig/hitrange for hit range Indicators (code is original)

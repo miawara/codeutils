@@ -83,9 +83,9 @@ public final class ReportTeleport extends Feature implements ChatEventListener, 
             int reportHash = new DatedReport(reporter, offender, offense, private_text, node_text, node_number, mode, System.currentTimeMillis()).getReportHash();
 
             return message.modified(message.modified().copy().withStyle(
-                    style -> style.withHoverEvent(new HoverEvent.ShowText(
-                    getFollowComponent(offender, node_formatted)))
-                            .withClickEvent(new ClickEvent.RunCommand("/internal_report_teleport " + node_id + " " + offender + " " + reportHash))));
+                    style -> style.withHoverEvent(new HoverEvent.ShowText(getFollowComponent(offender, node_formatted)))
+                                        .withClickEvent(new ClickEvent.RunCommand("/internal_report_teleport " + node_id + " " + offender + " " + reportHash))
+            ));
         }
         return message.pass();
     }
@@ -120,7 +120,6 @@ public final class ReportTeleport extends Feature implements ChatEventListener, 
     public static void sendModChatReportHash(int hashcode) {
         if (FeatureManager.getFeature(ReportTeleport.class).msgOnReportTeleport.getValue()) {
             CommandScheduler.addCommand(new ScheduledCommand("mb " + HASH_PREFIX + hashcode));
-            //Mod.messageError(HASH_PREFIX + hashcode);
         }
     }
 
@@ -128,29 +127,29 @@ public final class ReportTeleport extends Feature implements ChatEventListener, 
     public void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandBuildContext registryAccess) {
         dispatcher.register(ClientCommandManager.literal("internal_report_teleport")
             .then(ClientCommandManager.argument("node_id", StringArgumentType.string())
-                .then(ClientCommandManager.argument("player_name", StringArgumentType.string())
-                        .then(ClientCommandManager.argument("hashcode", StringArgumentType.string())
-                    .executes(commandContext -> {
-                        String offender = StringArgumentType.getString(commandContext, "offender");
-                        String node_id = StringArgumentType.getString(commandContext, "node_id");
-                        String hashcode = StringArgumentType.getString(commandContext, "hashcode");
+                .then(ClientCommandManager.argument("offender", StringArgumentType.string())
+                    .then(ClientCommandManager.argument("hashcode", StringArgumentType.string())
+                        .executes(commandContext -> {
+                            String node_id = StringArgumentType.getString(commandContext, "node_id");
+                            String offender = StringArgumentType.getString(commandContext, "offender");
+                            String hashcode = StringArgumentType.getString(commandContext, "hashcode");
 
-                        Mod.MC.execute(() -> {
-                            for (DatedReport report : FeatureManager.getFeature(ReportTracker.class).reports) {
-                                if (!report.handled()) {
-                                    if (report.getReportHash() == Integer.parseInt(hashcode)) {
-                                        report.setHandled(true);
-                                        sendModChatReportHash(report.getReportHash());
-                                        break;
+                            Mod.MC.execute(() -> {
+                                for (DatedReport report : FeatureManager.getFeature(ReportTracker.class).reports) {
+                                    if (!report.handled()) {
+                                        if (report.getReportHash() == Integer.parseInt(hashcode)) {
+                                            report.setHandled(true);
+                                            sendModChatReportHash(report.getReportHash());
+                                            break;
+                                        }
                                     }
                                 }
-                            }
-                        });
+                            });
 
-                        internalReportTeleport(offender, node_id);
-                        return 1;
-                    })
-                )
+                            internalReportTeleport(offender, node_id);
+                            return 1;
+                        })
+                    )
                 )
             )
         );

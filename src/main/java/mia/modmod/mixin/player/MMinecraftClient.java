@@ -26,24 +26,18 @@ public abstract class MMinecraftClient {
     @Inject(at = @At("HEAD"), method = "startUseItem")
     private void onRightClick(CallbackInfo ci) {
         FeatureManager.implementFeatureListener(PlayerUseEventListener.class, feature -> feature.useItemCallback(player, level, InteractionHand.MAIN_HAND));
-
     }
 
-    @Inject(method = "handleKeybinds", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "handleKeybinds", at = @At("TAIL"), cancellable = true)
     private void handleCustomKeybind(CallbackInfo ci) {
-        /*
-        SignPeek signPeek = FeatureManager.getFeature(SignPeek.class);
         if (Mod.MC.options.keySwapOffhand.isDown()) {
-            if (FeatureManager.hasFeature(SignPeek.class)) {
-                MiaKeyBind getSignPeek = signPeek.getSignName;
-                if (getSignPeek.getDefaultKey().getNumericKeyValue().equals(Mod.MC.options.keySwapOffhand.getDefaultKey().getNumericKeyValue())) {
-                    getSignPeek.tick();
-                    Mod.MC.options.keySwapOffhand.setDown(false);
-                    ci.cancel();
-                }
+            if (FeatureManager.getFeature(SignPeek.class).grabFunctionBody.getValue()) {
+                Mod.MC.options.keySwapOffhand.setDown(false);
+                SignPeek.grabFunctionName();
+                ci.cancel();
             }
         }
 
-         */
+
     }
 }
