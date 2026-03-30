@@ -34,11 +34,11 @@ public class ChronoTimestamp {
         int seconds = duration.toSecondsPart();
 
         String dateString = (
-                (((years > 0) ? years + (expandedForm ? " years, ": "y") : "")) +
-                        (((days > 0) ? days + (expandedForm ? " days, ": "d") : "")) +
-                        ((years > 0) ? "" : ((hours > 0) ? hours + (expandedForm ? " hours, ": "h") : "")) +
-                        (((years > 0) || (days > 0))? "" : ((minutes > 0) ? minutes + (expandedForm ? " minutes, ": "m") : "")) +
-                        (((years > 0) || (days > 0)) ? "" : (seconds + (expandedForm ? " seconds, ": "s")))
+                (((years > 0) ? years + (expandedForm ? " year" + ((years == 1) ? "" : "s") + ", ": "y") : "")) +
+                        (((days > 0) ? days + (expandedForm ? " day" + ((days == 1) ? "" : "s") + ", ": "d") : "")) +
+                        ((years > 0) ? "" : ((hours > 0) ? hours + (expandedForm ? " hour" + ((hours == 1) ? "" : "s") + ", ": "h") : "")) +
+                        (((years > 0) || (days > 0))? "" : ((minutes > 0) ? minutes + (expandedForm ? " minute" + ((minutes == 1) ? "" : "s") + ", ": "m") : "")) +
+                        (((years > 0) || (days > 0)) ? "" : (seconds + (expandedForm ? " second" + ((seconds == 1) ? "" : "s") + ", ": "s")))
         ).stripTrailing();
         if (dateString.endsWith(",")) dateString = dateString.substring(0, dateString.length()-1);
         return dateString;
