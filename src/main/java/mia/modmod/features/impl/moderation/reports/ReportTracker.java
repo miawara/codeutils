@@ -48,7 +48,7 @@ public final class ReportTracker extends Feature implements RegisterKeyBindEvent
         openQA = new MiaKeyBind("Open Report Screen", GLFW.GLFW_KEY_O, KeyBindCategories.GENERAL_CATEGORY);
         reports = new ArrayList<>();
 
-        reportHandledTimespan = new IntegerDataField("Report Handled Timespan (seconds)", ParameterIdentifier.of(this, "handled_timespan"), 30, true);
+        reportHandledTimespan = new IntegerDataField("Report Handled Timespan (seconds)", "How long after a report has been sent can someone say they handled the report in modchat", ParameterIdentifier.of(this, "handled_timespan"), 30, true);
     }
 
     @Override

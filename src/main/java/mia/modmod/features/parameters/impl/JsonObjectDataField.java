@@ -7,8 +7,8 @@ import mia.modmod.features.parameters.ParameterDataField;
 import mia.modmod.features.parameters.ParameterIdentifier;
 
 public class JsonObjectDataField extends ParameterDataField<JsonObject> implements InternalDataField {
-    public JsonObjectDataField(String name, ParameterIdentifier identifier, JsonObject defaultValue, boolean isConfig) {
-        super(name, identifier, defaultValue, isConfig);
+    public JsonObjectDataField(String name, String description, ParameterIdentifier identifier, JsonObject defaultValue, boolean isConfig) {
+        super(name, description, identifier, defaultValue, isConfig);
     }
 
     @Override

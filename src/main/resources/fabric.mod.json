@@ -4,9 +4,11 @@
 	"version": "${version}",
 	"name": ".modmod",
 	"description": "one person gets meteorclient everyone else has to run",
-	"authors": ["miawarajj"],
+	"authors": ["miawarajj", "@miawarajj"],
 	"contact": {
-		"sources": "https://github.com/miawara/modmod"
+		"sources": "https://github.com/miawara/modmod",
+		"issues": "https://github.com/miawara/modmod/issues",
+		"homepage": "https://github.com/miawara/modmod/wiki"
 	},
 	"license": "MIT",
 	"icon": "assets/modmod/icon.png",

@@ -33,8 +33,8 @@ public final class HitRange extends Feature {
     public HitRange(Categories category) {
         super(category, "Hit Range", "hitrange", "shows player hit range");
 
-        segmentParameter = new IntegerDataField("Segments", new ParameterIdentifier(this, "segments"), 100, true);
-        rangeThicknessParameter = new FloatDataField("Thickness", new ParameterIdentifier(this, "thickness"), 0.055f, true);
+        segmentParameter = new IntegerDataField("Segments", "Number of segments the hit range indicator is made of", new ParameterIdentifier(this, "segments"), 100, true);
+        rangeThicknessParameter = new FloatDataField("Thickness", "Width of the hit range indicator", new ParameterIdentifier(this, "thickness"), 0.055f, true);
     }
 
     public static final RenderType QUADS = RenderTypeAccessor.of(

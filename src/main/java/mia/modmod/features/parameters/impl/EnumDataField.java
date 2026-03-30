@@ -3,6 +3,7 @@ package mia.modmod.features.parameters.impl;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.isxander.yacl3.api.Option;
+import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.EnumDropdownControllerBuilder;
 import mia.modmod.features.parameters.ParameterDataField;
@@ -12,8 +13,8 @@ import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("rawtypes")
 public class EnumDataField<T extends Enum> extends ParameterDataField<T> {
-    public EnumDataField(String name, ParameterIdentifier identifier, T defaultValue, boolean isConfig) {
-        super(name, identifier, defaultValue, isConfig);
+    public EnumDataField(String name, String description, ParameterIdentifier identifier, T defaultValue, boolean isConfig) {
+        super(name, description, identifier, defaultValue, isConfig);
     }
 
     @Override
@@ -48,6 +49,7 @@ public class EnumDataField<T extends Enum> extends ParameterDataField<T> {
         featureGroup.option(
                 Option.createBuilder(Enum.class)
                         .name(Component.literal(this.getName()))
+                        .description(OptionDescription.of(Component.literal(this.getDescription())))
                         .binding(
                                 this.getValue(),
                                 this::getValue,

@@ -33,9 +33,9 @@ public abstract class MClientConnection {
             ModifiableEventData<Component> eventData = new ModifiableEventData<>(content.copy(), content.copy());
 
 
-            if (FeatureManager.getFeature(VerboseLogger.class).getEnabled()) {
-                //Mod.warn(content.getString());
-                //Mod.warn(content.toString());
+            if (FeatureManager.getFeature(VerboseLogger.class).verboseChatLogger.getValue()) {
+                Mod.warn(content.getString());
+                Mod.warn(content.toString());
             }
 
             for (ChatEventListener feature :  FeatureManager.getFeaturesByIdentifier(ChatEventListener.class)) {

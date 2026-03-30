@@ -66,10 +66,6 @@ public final class ConfigStore {
                     .name(Component.literal(category.getName()))
                     .tooltip(Component.literal(category.getDescription()));
 
-
-
-
-
             for (Feature feature : category.getFeatures()) {
                 ArrayList<? extends ParameterDataField<?>> dataFields = feature.getParameterDataFields();
                 Option featureOption = Option.createBuilder(boolean.class)

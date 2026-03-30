@@ -15,6 +15,7 @@ import mia.modmod.features.listeners.ModifiableEventData;
 import mia.modmod.features.listeners.ModifiableEventResult;
 import mia.modmod.features.listeners.impl.ChatEventListener;
 import mia.modmod.features.listeners.impl.RegisterCommandListener;
+import mia.modmod.features.listeners.impl.TickEvent;
 import mia.modmod.features.parameters.ParameterIdentifier;
 import mia.modmod.features.parameters.impl.BooleanDataField;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
@@ -29,13 +30,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public final class ReportTeleport extends Feature implements ChatEventListener, RegisterCommandListener {
+public final class ReportTeleport extends Feature implements ChatEventListener, RegisterCommandListener, TickEvent {
     public static final Pattern REPORT_PATTERN = Pattern.compile("^! Incoming Report \\(([A-Za-z0-9_]{3,16})\\)\\n\\|  Offender: ([A-Za-z0-9_]{3,16})\\n\\|  Offense: (.*)\\n\\|  Location: (Private |)(.*) (\\d*) ((?:Mode|Spawn|Existing).*)$");
     private final BooleanDataField runalts;
+    public static boolean requestingHistory = false;
+    private static boolean isInternalReportTeleport = false;
+
+    private static String requestPlayerName;
+    private static String requestNodeID;
 
     public ReportTeleport(Categories category) {
         super(category, "ReportTeleport", "reportteleport", "Click on report msgs to teleport the offender.");
-        runalts = new BooleanDataField("Run /alts", ParameterIdentifier.of(this, "runalts"), true, true);
+        runalts = new BooleanDataField("Run /alts", "Runs /alts when you click on a report", ParameterIdentifier.of(this, "runalts"), true, true);
 
     }
 
@@ -78,14 +84,31 @@ public final class ReportTeleport extends Feature implements ChatEventListener, 
     }
 
 
-    public static void internalReportTeleport(String player_name, String node_id) {;
+    public static void internalReportTeleport(String player_name, String node_id) {
         PlayerTracker.addTrackedPlayer(player_name);
-        CommandScheduler.addCommand(new ScheduledCommand("preference mod_vanish true", 500L));
-        CommandScheduler.addCommand(new ScheduledCommand("server " + node_id));
-        CommandScheduler.addCommand(new ScheduledCommand("tp " + player_name, 250L));
-        if (FeatureManager.getFeature(ReportTeleport.class).runalts.getValue()) CommandScheduler.addCommand(new ScheduledCommand("alts " + player_name));
+        requestingHistory = true;
+        isInternalReportTeleport = true;
+
+        requestPlayerName = player_name;
+        requestNodeID = node_id;
     }
 
+    @Override
+    public void tickR(int tick) {
+        if (isInternalReportTeleport && !requestingHistory) {
+            CommandScheduler.addCommand(new ScheduledCommand("preference mod_vanish true", 500L));
+            CommandScheduler.addCommand(new ScheduledCommand("server " + requestNodeID));
+            CommandScheduler.addCommand(new ScheduledCommand("tp " + requestPlayerName, 250L));
+            if (FeatureManager.getFeature(ReportTeleport.class).runalts.getValue()) CommandScheduler.addCommand(new ScheduledCommand("alts " + requestPlayerName));
+
+            isInternalReportTeleport = false;
+        }
+    }
+
+    @Override
+    public void tickF(int tick) {
+
+    }
 
     @Override
     public void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandBuildContext registryAccess) {
@@ -118,4 +141,6 @@ public final class ReportTeleport extends Feature implements ChatEventListener, 
             )
         );
     }
+
+
 }

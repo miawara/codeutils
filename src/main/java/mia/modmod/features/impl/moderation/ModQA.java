@@ -19,6 +19,8 @@ import mia.modmod.features.listeners.impl.ChatEventListener;
 import mia.modmod.features.listeners.impl.RegisterKeyBindEvent;
 import mia.modmod.features.listeners.impl.RenderHUD;
 import mia.modmod.features.listeners.impl.TickEvent;
+import mia.modmod.features.parameters.ParameterIdentifier;
+import mia.modmod.features.parameters.impl.BooleanDataField;
 import mia.modmod.render.screens.AnimationStage;
 import mia.modmod.render.screens.modqa.ModQAScreen;
 import net.minecraft.client.DeltaTracker;
@@ -33,9 +35,12 @@ import java.util.regex.Pattern;
 public final class ModQA extends Feature implements RegisterKeyBindEvent, TickEvent, RenderHUD {
     public MiaKeyBind openQA;
     private ModQAScreen modQAScreen;
+    public final BooleanDataField safetyMode;
+
     public ModQA(Categories category) {
-        super(category, "Mod Quick Access", "modqa", "Screen for selecting common ban / mute reasons", new Permissions(SupportPermission.NONE, ModeratorPermission.JR_MOD));
+        super(category, "Mod Quick Access Screen", "modqa", "Screen for selecting common ban / mute reasons", new Permissions(SupportPermission.NONE, ModeratorPermission.JR_MOD));
         openQA = new MiaKeyBind("Open QA Screen", GLFW.GLFW_KEY_X, KeyBindCategories.GENERAL_CATEGORY);
+        safetyMode = new BooleanDataField("Saftey Mode", "prevents u from banning yourself (i already made it pretty hard this is for testing purposes only)", ParameterIdentifier.of(this, "safe_mode"), true, true);
     }
 
     @Override

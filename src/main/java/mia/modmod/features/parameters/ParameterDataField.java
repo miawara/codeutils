@@ -7,14 +7,16 @@ import mia.modmod.config.ConfigStore;
 
 public abstract class ParameterDataField<T> {
     protected final String name;
+    protected final String description;
     protected final ParameterIdentifier identifier;
     protected final Class<T> classType;
     protected T dataField;
     protected boolean isConfig;
 
     @SuppressWarnings("unchecked")
-    public ParameterDataField(String name, ParameterIdentifier identifier, T defaultValue, boolean isConfig) {
+    public ParameterDataField(String name, String description, ParameterIdentifier identifier, T defaultValue, boolean isConfig) {
         this.name = name;
+        this.description = description;
         this.identifier = identifier;
         this.classType = (Class<T>) defaultValue.getClass();
         this.dataField = ConfigStore.getParameter(this, defaultValue);
@@ -32,6 +34,7 @@ public abstract class ParameterDataField<T> {
 
 
     public String getName() { return this.name; }
+    public String getDescription() { return this.description; }
     public Class<T> getDataClassType() { return this.classType; }
     public ParameterIdentifier getIdentifier() { return this.identifier; }
     public boolean isConfig() { return isConfig; }

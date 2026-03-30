@@ -47,7 +47,7 @@ public final class PlayerOutliner extends Feature implements RenderHUD, ServerCo
 
     public PlayerOutliner(Categories category) {
         super(category, "Player Outliner", "outliner", "outlines tracked players", new Permissions(SupportPermission.NONE, ModeratorPermission.JR_MOD));
-        outlinerColor = new ColorDataField("Outline Color", new ParameterIdentifier(this, "outline_color"), new Color(0xed7aff), true);
+        outlinerColor = new ColorDataField("Outline Color", "", new ParameterIdentifier(this, "outline_color"), new Color(0xed7aff), true);
     }
 
     @Override

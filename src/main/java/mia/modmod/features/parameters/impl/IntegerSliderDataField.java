@@ -1,6 +1,7 @@
 package mia.modmod.features.parameters.impl;
 
 import dev.isxander.yacl3.api.Option;
+import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import mia.modmod.features.parameters.ParameterIdentifier;
@@ -8,8 +9,8 @@ import net.minecraft.network.chat.Component;
 
 public class IntegerSliderDataField extends IntegerDataField {
     private final int minValue, maxValue;
-    public IntegerSliderDataField(String name, ParameterIdentifier identifier, Integer defaultValue, Integer minValue, Integer maxValue, boolean isConfig) {
-        super(name, identifier, defaultValue, isConfig);
+    public IntegerSliderDataField(String name, String description, ParameterIdentifier identifier, Integer defaultValue, Integer minValue, Integer maxValue, boolean isConfig) {
+        super(name, description, identifier, defaultValue, isConfig);
         this.minValue = minValue;
         this.maxValue = maxValue;
     }
@@ -28,6 +29,7 @@ public class IntegerSliderDataField extends IntegerDataField {
         featureGroup.option(
                 Option.createBuilder(Integer.class)
                         .name(Component.literal(this.getName()))
+                        .description(OptionDescription.of(Component.literal(this.getDescription())))
                         .binding(
                                 this.getValue(),
                                 this::getValue,

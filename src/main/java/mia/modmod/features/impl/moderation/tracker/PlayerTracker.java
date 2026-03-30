@@ -10,6 +10,7 @@ import mia.modmod.features.Feature;
 import mia.modmod.features.FeatureManager;
 import mia.modmod.features.impl.internal.commands.CommandScheduler;
 import mia.modmod.features.impl.internal.commands.ScheduledCommand;
+import mia.modmod.features.impl.moderation.reports.ReportTeleport;
 import mia.modmod.features.impl.moderation.tracker.punishments.ChronoTimestamp;
 import mia.modmod.features.impl.moderation.tracker.punishments.PunishmentData;
 import mia.modmod.features.impl.moderation.tracker.punishments.PunishmentTrack;
@@ -95,10 +96,24 @@ public final class PlayerTracker extends Feature implements RegisterCommandListe
         for (Map.Entry<PunishmentTrack, ArrayList<PunishmentData>> entry : trackedPlayerPunishmentTracks.get(player).getTrackedPunishments().entrySet()) {
             if (!entry.getValue().isEmpty()) {
                 numPunishments += entry.getValue().size();
-                text.add(
-                        Component.literal( entry.getKey().getReasonText() + " ").withColor(ColorBank.WHITE_GRAY)
-                                .append(Component.literal("[" + entry.getValue().size() + "]").withColor(ColorBank.MC_GRAY))
-                );
+
+                Component trackEntry = Component.literal( entry.getKey().getReasonText() + " ").withColor(ColorBank.WHITE_GRAY)
+                        .append(Component.literal("[" + entry.getValue().size() + "]").withColor(ColorBank.MC_RED));
+
+                if (PunishmentTrack.expiringPunishments.contains(entry.getKey())) {
+                    int numInvalidPunishments = 0;
+                    if (PunishmentTrack.expiringPunishments.contains(entry.getKey())) {
+                        for (PunishmentData punishmentData : entry.getValue()) {
+                            if (punishmentData.chronoTimestamp().getTimestamp() < ChronoTimestamp.PAST_from_DHMS(14, 0, 0, 0).getTimestamp()) {
+                                numInvalidPunishments++;
+                            }
+                        }
+                    }
+                    if (numInvalidPunishments > 0)
+                        trackEntry = trackEntry.copy().append(Component.literal(" (" + numInvalidPunishments + " Expired Punishment" + (numInvalidPunishments == 1 ? "" : "s") + ")").withColor(ColorBank.MC_GRAY));
+                }
+
+                text.add(trackEntry);
             }
         }
         if (numPunishments == 0) {
@@ -115,6 +130,7 @@ public final class PlayerTracker extends Feature implements RegisterCommandListe
     }
 
     private void endGetPlayerHistory() {
+        ReportTeleport.requestingHistory = false;
         historyState = HistoryState.NONE;
 
         if (currentGetPlayerHistory != null) {

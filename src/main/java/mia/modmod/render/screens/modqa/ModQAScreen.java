@@ -3,6 +3,7 @@ package mia.modmod.render.screens.modqa;
 import mia.modmod.ColorBank;
 import mia.modmod.Mod;
 import mia.modmod.features.FeatureManager;
+import mia.modmod.features.impl.moderation.ModQA;
 import mia.modmod.features.impl.moderation.tracker.PlayerTracker;
 import mia.modmod.features.impl.moderation.tracker.punishments.*;
 import mia.modmod.render.screens.FPSAnimation;
@@ -219,8 +220,16 @@ public class ModQAScreen extends Screen {
 
                     ArrayList<PunishmentData> trackHistory = punishmentHistory.getTrackedPunishments().get(punishmentTrack);
 
+                    int numOffenses = 0;
 
-                    int numOffenses = trackHistory.size();
+                    if (PunishmentTrack.expiringPunishments.contains(punishmentTrack)) {
+                        for (PunishmentData punishmentData : trackHistory) {
+                            if (punishmentData.chronoTimestamp().getTimestamp() > ChronoTimestamp.PAST_from_DHMS(14, 0, 0, 0).getTimestamp()) {
+                                numOffenses++;
+                            }
+                        }
+                    } else numOffenses = trackHistory.size();
+
 
                     int punishLevel = Math.max(((numOffenses - chances) + 1), 0);
                     PunishmentDuration punishmentDuration;
@@ -353,8 +362,11 @@ public class ModQAScreen extends Screen {
                         }
                     }
 
-
                     optionButton.setCallback(() -> {
+                        if (selectedPlayer.equals(Mod.getPlayerName()) && FeatureManager.getFeature(ModQA.class).safetyMode.getValue()) {
+                            Mod.messageError("hey stop that (Safety Mode Active)");
+                            return;
+                        }
                         Mod.sendCommand(command);
                         PlayerTracker.getTrackerPlayers().remove(selectedPlayer);
                         if (!PlayerTracker.getTrackerPlayers().isEmpty()) {
