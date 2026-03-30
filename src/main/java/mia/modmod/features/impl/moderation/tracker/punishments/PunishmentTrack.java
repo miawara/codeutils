@@ -31,7 +31,11 @@ public enum PunishmentTrack {
 
     INAPPROPRIATE_SKIN_USERNAME("Inappropriate Skin / Username (Appeal when changed)", new PunishmentEscalation(ServerPunishmentType.BAN,0, PunishmentDuration.PERM, PunishmentDuration.PERM), List.of("(Inappropriate|explicit) Skin", "(Inappropriate|explicit) (|User)Name")),
     BAN_EVASION("Ban Evasion", new PunishmentEscalation(ServerPunishmentType.BAN,0, PunishmentDuration.PERM, PunishmentDuration.PERM), List.of("Ban Evasion")),
-    MUTE_EVASION("Mute Evasion", new PunishmentEscalation(ServerPunishmentType.BAN,0, PunishmentDuration.PERM, PunishmentDuration.PERM), List.of()); // this one is special <3
+
+    // Requires custom duration input
+
+    INAPPROPRIATE_PLOT_CONTENT("Inappropriate Plot Content", new PunishmentEscalation(ServerPunishmentType.BAN,0, PunishmentDuration.PERM, PunishmentDuration.PERM), List.of("(inappropriate|explicit|sexual) (plot |)content")),
+    MUTE_EVASION("Mute Evasion", new PunishmentEscalation(ServerPunishmentType.BAN,0, PunishmentDuration.PERM, PunishmentDuration.PERM), List.of("Mute Evasion", "Mute Bypass", "bypassing mute", "bypass mute", "mute evasion"));
 
     public static final List<PunishmentTrack> expiringPunishments = List.of(
             SPAMMING,
