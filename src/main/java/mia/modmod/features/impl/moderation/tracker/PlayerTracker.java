@@ -153,15 +153,40 @@ public final class PlayerTracker extends Feature implements RegisterCommandListe
 
     public ArrayList<Component> getTrackedHistoryLastestPunishmentText(String player) {
         ArrayList<Component> text = new ArrayList<>();
+        ArrayList<PunishmentData> activePunishments = new ArrayList<>();
 
         for (Map.Entry<PunishmentTrack, ArrayList<PunishmentData>> entry : trackedPlayerPunishmentTracks.get(player).getTrackedPunishments().entrySet()) {
             if (!entry.getValue().isEmpty()) {
                 long earliestTimestamp = 0;
+                PunishmentData latest = null;
 
                 for (PunishmentData punishmentData : entry.getValue()) {
-                    if (punishmentData.chronoTimestamp().getTimestamp() > earliestTimestamp) earliestTimestamp = punishmentData.chronoTimestamp().getTimestamp();
+                    if (punishmentData.isActive()) activePunishments.add(punishmentData);
+                    if (punishmentData.chronoTimestamp().getTimestamp() > earliestTimestamp)  {
+                        earliestTimestamp = punishmentData.chronoTimestamp().getTimestamp();
+                        latest = punishmentData;
+                    }
                 }
-                text.add(Component.literal(" Latest: " + ChronoTimestamp.ABSOLUTE_from_Timestamp(earliestTimestamp).PAST_DHMS_string(true) + " ago").withColor(ColorBank.MC_GRAY));
+                text.add(Component.literal("").withColor(ColorBank.MC_GRAY)
+                                .append(Component.literal(latest.issuer()).withColor(ColorBank.WHITE))
+                        .append(Component.literal(" : " + ChronoTimestamp.ABSOLUTE_from_Timestamp(earliestTimestamp).PAST_DHMS_string(true) + " ago").withColor(ColorBank.WHITE_GRAY))
+                );
+            }
+        }
+        if (text.isEmpty()) {
+            text.addFirst(Component.empty());
+        } else {
+            text.addFirst(Component.literal("Latest by:").withColor(ColorBank.WHITE));
+        }
+
+        if (!activePunishments.isEmpty()) {
+            text.add(Component.empty());
+            text.add(Component.empty());
+            for (PunishmentData punishmentData : activePunishments) {
+                text.add(Component.literal("").withColor(ColorBank.MC_GRAY)
+                        .append(Component.literal(punishmentData.issuer()).withColor(ColorBank.WHITE))
+                        .append(Component.literal(" : " + punishmentData.chronoTimestamp().PAST_DHMS_string(true) + " ago").withColor(ColorBank.WHITE_GRAY))
+                );
             }
         }
         return text;

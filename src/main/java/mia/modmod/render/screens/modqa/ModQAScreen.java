@@ -53,7 +53,7 @@ public class ModQAScreen extends Screen {
 
     public void draw(GuiGraphics context, int mouseX, int mouseY) {
         Point screen = new Point(Mod.getScaledWindowWidth(), Mod.getScaledWindowHeight());
-        int mainContainerWidth = 500;
+        int mainContainerWidth = 500+100;
         int mainContainerHeight = 300;
         this.buttons = new ArrayList<>();
 
@@ -210,7 +210,7 @@ public class ModQAScreen extends Screen {
                 k++;
             }
 
-            k = 1;
+            k = 0;
             for (Component component : FeatureManager.getFeature(PlayerTracker.class).getTrackedHistoryLastestPunishmentText(selectedPlayer)) {
                 DrawText lastestPunishment = new DrawText(
                         new Point(-playerNameMargin, playerNameMargin + ((font.lineHeight+1) * k)),
