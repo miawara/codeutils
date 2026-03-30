@@ -135,7 +135,6 @@ public final class PlayerTracker extends Feature implements RegisterCommandListe
 
         if (currentGetPlayerHistory != null) {
             for (Component component : getTrackedHistoryText(currentGetPlayerHistory)) Mod.message(component);
-
         }
 
 
