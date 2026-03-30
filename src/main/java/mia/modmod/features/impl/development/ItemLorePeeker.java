@@ -36,9 +36,11 @@ public final class ItemLorePeeker extends Feature implements RenderHUD {
         if (itemLore != null) lore.addAll(itemLore.lines());
         lore.addAll(ItemTagViewer.getItemLoreWithTags(selectedItem));
 
-        int x = (context.guiWidth() / 2) + 91 - 4; // magic number <3
         if (!lore.isEmpty()) {
-            lore.addFirst(selectedItem.getItemName());
+            Component name = selectedItem.getItemName();
+            if (selectedItem.getComponents().has(DataComponents.CUSTOM_NAME)) name = selectedItem.getComponents().get(DataComponents.CUSTOM_NAME);
+            lore.addFirst(name);
+
             try {
                 DrawContextHelper.drawTooltip(context, lore, FeatureManager.getFeature(CPUDisplay.class).cpuText.x1() - 7, FeatureManager.getFeature(CPUDisplay.class).isDisplayed() ? FeatureManager.getFeature(CPUDisplay.class).container.y2() + 2 : FeatureManager.getFeature(CPUDisplay.class).cpuText.y1(), 0f);
             } catch (Exception e) {

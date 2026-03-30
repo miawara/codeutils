@@ -28,7 +28,7 @@ import java.util.List;
 
 public final class ItemTagViewer extends Feature implements RenderTooltip, RegisterKeyBindEvent, TickEvent {
     private static BooleanDataField devRestricted;
-    private static BooleanDataField alwaysShowTags;
+    private static BooleanDataField requireCTRL;
     private static ColorDataField regularKeyColor;
     private static ColorDataField stringValueColor;
     private static ColorDataField numberValueColor;
@@ -45,7 +45,7 @@ public final class ItemTagViewer extends Feature implements RenderTooltip, Regis
     public ItemTagViewer(Categories category) {
         super(category, "Item Tag Viewer", "itemtagviewer", "Shows hypercube item tags while in dev mode.");
         devRestricted = new BooleanDataField("Dev-mode Restricted", "Only shows item tags in dev mode", ParameterIdentifier.of(this, "dev_mode_restricted"), true, true);
-        alwaysShowTags = new BooleanDataField("Always Show Tags", "If enabled, tags will show on all items regardless of if CTRL is pressed", ParameterIdentifier.of(this, "shift_required"), false, true);
+        requireCTRL = new BooleanDataField("Require CTRL", "Only shows item tags if CTRL is pressed", ParameterIdentifier.of(this, "ctrl_required"), false, true);
         regularKeyColor = new ColorDataField("Tag Key Color", "", ParameterIdentifier.of(this, "tag_key_color"), new Color(0xeebdff), true);
         stringValueColor = new ColorDataField("String Value Color", "", ParameterIdentifier.of(this, "string_value_color"), new Color(0xbdd7ff), true);
         numberValueColor = new ColorDataField("Number Value Color", "", ParameterIdentifier.of(this, "number_value_color"), new Color(0xff5555), true);
@@ -59,8 +59,9 @@ public final class ItemTagViewer extends Feature implements RenderTooltip, Regis
         if (!LocationAPI.getMode().canViewCode()) {
             if (devRestricted.getValue()) return List.of();
         }
-        if (!Mod.MC.hasControlDown() && !alwaysShowTags.getValue()) return List.of();
-    Optional<HashMap<String,Tag>> hypercubeTags = new MDFItem(item).getHypercubeItemTags(true);
+        if (!Mod.MC.hasControlDown() && requireCTRL.getValue()) return List.of();
+
+        Optional<HashMap<String,Tag>> hypercubeTags = new MDFItem(item).getHypercubeItemTags(true);
         ArrayList<Component> loreLines = new ArrayList<>();
 
         if (hypercubeTags.isPresent()) {
