@@ -4,7 +4,9 @@
 	"version": "${version}",
 	"name": ".modmod",
 	"description": "one person gets meteorclient everyone else has to run",
-	"authors": ["miawarajj", "@miawarajj"],
+	"authors": [
+		"miawarajj"
+	],
 	"contact": {
 		"sources": "https://github.com/miawara/modmod",
 		"issues": "https://github.com/miawara/modmod/issues",
