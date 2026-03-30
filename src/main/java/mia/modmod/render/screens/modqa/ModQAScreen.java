@@ -4,6 +4,7 @@ import mia.modmod.ColorBank;
 import mia.modmod.Mod;
 import mia.modmod.features.FeatureManager;
 import mia.modmod.features.impl.moderation.ModQA;
+import mia.modmod.features.impl.moderation.reports.ReportTracker;
 import mia.modmod.features.impl.moderation.tracker.PlayerTracker;
 import mia.modmod.features.impl.moderation.tracker.punishments.*;
 import mia.modmod.render.screens.FPSAnimation;
@@ -110,9 +111,12 @@ public class ModQAScreen extends Screen {
             DrawRect titleBar = new DrawRect(Point.ZERO, new Point(mainContainer.getWidth() - sidebarContainer.getWidth(), blockSize), new ARGB(mainColor, 0.7f * animation.getProgress()), sidebarContainer);
             titleBar.setParentBinding(new DrawBinding(AxisBinding.FULL, AxisBinding.NONE));
 
-            DrawText titleBarText = new DrawText(new Point(playerNameMargin, 0), Component.literal(selectedPlayer).withColor(ColorBank.WHITE_GRAY), animation.getProgress(), true, titleBar);
+            DrawText titleBarText = new DrawText(new Point(playerNameMargin, 0), Component.literal(selectedPlayer).withColor(ColorBank.WHITE), animation.getProgress(), false, titleBar);
             titleBarText.setParentBinding(new DrawBinding(AxisBinding.NONE, AxisBinding.MIDDLE));
             titleBarText.setSelfBinding(new DrawBinding(AxisBinding.NONE, AxisBinding.MIDDLE));
+
+            DrawText joinText = new DrawText(new Point(0, 0), Component.literal(" Joined: " + PlayerTracker.getPlayerJoinDateString(selectedPlayer)).withColor(ColorBank.WHITE_GRAY), animation.getProgress(), false, titleBarText);
+            joinText.setParentBinding(new DrawBinding(AxisBinding.FULL, AxisBinding.NONE));
 
             DrawText shiftText = new DrawText(new Point(-playerNameMargin, 0), Component.literal("shift to silent").withColor(ColorBank.MC_GRAY).withStyle(ChatFormatting.ITALIC), animation.getProgress(), true, titleBar);
             shiftText.setParentBinding(new DrawBinding(AxisBinding.FULL, AxisBinding.MIDDLE));

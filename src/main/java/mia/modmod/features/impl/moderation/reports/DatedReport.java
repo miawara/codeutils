@@ -34,7 +34,7 @@ public class DatedReport{
     public String mode() { return mode; }
     public long timestamp() { return timestamp; }
     public boolean handled() { return handled; }
-    
+
     public String formattedLocation() { return private_text() + node_text() + " " + node_number(); }
     public String nodeIdentifier() { return private_text.isEmpty() ? "node" + node_number : "private" + node_number;}
     

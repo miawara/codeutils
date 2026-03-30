@@ -7,6 +7,7 @@ import mia.modmod.features.FeatureManager;
 import mia.modmod.features.impl.moderation.reports.DatedReport;
 import mia.modmod.features.impl.moderation.reports.ReportTeleport;
 import mia.modmod.features.impl.moderation.reports.ReportTracker;
+import mia.modmod.features.impl.moderation.tracker.punishments.ChronoTimestamp;
 import mia.modmod.render.screens.FPSAnimation;
 import mia.modmod.render.screens.AnimationStage;
 import mia.modmod.render.util.*;
@@ -165,7 +166,7 @@ public class ReportScreen extends Screen {
                     Component.empty().append(Component.literal("|").withColor(ColorBank.MC_RED).append(Component.literal("  Location: ").withColor(0xD4D4D4).append(Component.literal(report.formattedLocation()).withColor(ColorBank.WHITE))))
             ));
             ArrayList<Component> reportText = new ArrayList<>();
-            reportText.add(Component.empty().append(Component.literal("Reported: ").withColor(0xFFAAAA).append(Component.literal(MathUtils.convertTimestampRelativeHMS(System.currentTimeMillis() - (Math.round(report.timestamp() / 1000.0) * 1000)) + " ago").withColor(ColorBank.WHITE_GRAY))));
+            reportText.add(Component.empty().append(Component.literal("Reported: ").withColor(0xFFAAAA).append(Component.literal(ChronoTimestamp.ABSOLUTE_from_Timestamp(report.timestamp()).PAST_DHMS_string() + " ago").withColor(ColorBank.WHITE_GRAY))));
             reportText.addAll(reportTextBody);
 
 

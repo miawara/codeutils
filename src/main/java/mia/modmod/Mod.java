@@ -122,6 +122,10 @@ public class Mod implements ClientModInitializer {
 
 	private static void message(Component message, int mia, int main) {
 		if (Mod.MC.player == null) return;
+		if (message.equals(Component.empty())) {
+			rawMessage(message);
+			return;
+		}
 		Mod.MC.execute(() -> {
 			Mod.MC.player.displayClientMessage(Component.empty()
 				.append(Component.literal(MOD_ID + " ").withColor(mia))
