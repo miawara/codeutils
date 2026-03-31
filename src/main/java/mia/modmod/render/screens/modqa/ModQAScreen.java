@@ -6,7 +6,7 @@ import mia.modmod.features.FeatureManager;
 import mia.modmod.features.impl.moderation.ModQA;
 import mia.modmod.features.impl.moderation.tracker.PlayerTracker;
 import mia.modmod.features.impl.moderation.tracker.punishments.*;
-import mia.modmod.render.screens.FPSAnimation;
+import mia.modmod.render.screens.FramIndependentAnimation;
 import mia.modmod.render.screens.AnimationStage;
 import mia.modmod.render.util.*;
 import mia.modmod.render.util.Point;
@@ -26,7 +26,7 @@ import java.util.List;
 
 public class ModQAScreen extends Screen {
     private final Screen parent;
-    public final FPSAnimation animation;
+    public final FramIndependentAnimation animation;
 
     private String selectedPlayer = null;
     private boolean hasMovedCursor = false;
@@ -37,7 +37,7 @@ public class ModQAScreen extends Screen {
     public ModQAScreen(Screen parent) {
         super(Component.literal("MODQA"));
         this.parent = parent;
-        this.animation = new FPSAnimation(AnimationStage.OPENING, 0f, EasingFunctions::easeInOutCircular);
+        this.animation = new FramIndependentAnimation(AnimationStage.OPENING, 0f, EasingFunctions::easeInOutCircular);
         if (!PlayerTracker.getTrackerPlayers().isEmpty()) this.selectedPlayer = PlayerTracker.getTrackerPlayers().getFirst();
     }
 
