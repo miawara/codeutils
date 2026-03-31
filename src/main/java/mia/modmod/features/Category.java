@@ -19,4 +19,6 @@ public class Category {
 
     public void addFeature(Feature feature) { features.add(feature); feature.setCategory(this); }
     public ArrayList<Feature> getFeatures() { return this.features; }
+
+    public void setEnabled(boolean enabled) { for (Feature feature : getFeatures()) feature.setEnabled(enabled); }
 }

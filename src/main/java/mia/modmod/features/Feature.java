@@ -13,20 +13,14 @@ public abstract class Feature {
     protected Category category;
     private final ArrayList<ParameterDataField<?>> parameterDataFields;
     private final InternalBooleanDataField enabledParameter;
-    protected final Permissions permissions;
 
     public Feature(Categories category, String name, String id, String description) {
-        this(category, name, id, description, Permissions.NONE);
-    }
-
-    public Feature(Categories category, String name, String id, String description, Permissions permissions) {
-        this.permissions = permissions;
         this.id = id;
         this.name = name;
         this.description = description;
         this.parameterDataFields = new ArrayList<>();
 
-        enabledParameter = new InternalBooleanDataField("Enabled", "", ParameterIdentifier.of(this, "enabled"), true, false);
+        enabledParameter = new InternalBooleanDataField("Enabled", "", ParameterIdentifier.of(this, "enabled"), Permissions.NONE.hasPerm(category.getRequirePermissions()), false);
 
         category.getCategory().addFeature(this);
     }
@@ -44,6 +38,4 @@ public abstract class Feature {
     public String getID() { return this.id; }
     public String getName() { return this.name; }
     public String getDescription() { return this.description; }
-
-    public Permissions getRequiredPermissions() { return permissions; }
 }

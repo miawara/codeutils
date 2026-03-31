@@ -10,7 +10,6 @@ import mia.modmod.features.Categories;
 import mia.modmod.features.Category;
 import mia.modmod.features.Feature;
 import mia.modmod.features.FeatureManager;
-import mia.modmod.features.listeners.impl.AlwaysEnabled;
 import mia.modmod.features.parameters.ParameterDataField;
 import mia.modmod.features.parameters.ParameterIdentifier;
 import mia.modmod.features.parameters.impl.InternalDataField;
@@ -44,6 +43,7 @@ public final class ConfigStore {
     }
 
     public static void save() {
+        if (configData == null) load();
         for (Feature feature : FeatureManager.getFeatures()) {
             feature.getParameterDataFields().forEach(ConfigStore::saveParameter);
         }

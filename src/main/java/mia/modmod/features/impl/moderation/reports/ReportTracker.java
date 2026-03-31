@@ -7,9 +7,6 @@ import mia.modmod.core.KeyBindManager;
 import mia.modmod.core.MiaKeyBind;
 import mia.modmod.features.Categories;
 import mia.modmod.features.Feature;
-import mia.modmod.features.impl.internal.permissions.ModeratorPermission;
-import mia.modmod.features.impl.internal.permissions.Permissions;
-import mia.modmod.features.impl.internal.permissions.SupportPermission;
 import mia.modmod.features.impl.internal.server.ServerManager;
 import mia.modmod.features.listeners.ModifiableEventData;
 import mia.modmod.features.listeners.ModifiableEventResult;
@@ -35,7 +32,7 @@ public final class ReportTracker extends Feature implements RegisterKeyBindEvent
     public ArrayList<DatedReport> reports;
 
     public ReportTracker(Categories category) {
-        super(category, "Report Tracker", "report_tracker", "Shows recent reports", new Permissions(SupportPermission.NONE, ModeratorPermission.JR_MOD));
+        super(category, "Report Tracker", "report_tracker", "Shows recent reports");
         openQA = new MiaKeyBind("Open Report Screen", GLFW.GLFW_KEY_O, KeyBindCategories.STAFF);
         reports = new ArrayList<>();
   }

@@ -1,20 +1,17 @@
 package mia.modmod.features.impl.moderation.tracker.punishments;
 
-import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.util.Date;
-import java.util.TimeZone;
 
 public class ChronoTimestamp {
-    private long timestamp;
+    private final long timestamp;
 
     private ChronoTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+        this.timestamp = (timestamp / 1000L) * 1000L;
     }
 
     public long getTimestamp() { return timestamp; }
 
-    public static ChronoTimestamp ABSOLUTE_from_Timestamp(long timestamp) { return new ChronoTimestamp(timestamp); }
+    public static ChronoTimestamp ABSOLUTE_from_Timestamp(long timestamp) { return new ChronoTimestamp( timestamp ); }
     public static ChronoTimestamp PAST_from_DHMS(int d, int h, int m, int s) {
         return new ChronoTimestamp(
                 (System.currentTimeMillis()) - ((

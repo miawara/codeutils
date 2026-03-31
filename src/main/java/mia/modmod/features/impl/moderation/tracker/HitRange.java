@@ -149,5 +149,5 @@ public final class HitRange extends Feature {
                     getTR()
             };
         }
-    };
+    }
 }

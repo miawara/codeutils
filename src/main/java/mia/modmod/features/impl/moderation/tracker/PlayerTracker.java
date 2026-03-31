@@ -104,21 +104,22 @@ public final class PlayerTracker extends Feature implements RegisterCommandListe
                     if (punishmentData.chronoTimestamp().getTimestamp() > earliestTimestamp) earliestTimestamp = punishmentData.chronoTimestamp().getTimestamp();
                 }
 
-                Component trackEntry = Component.literal( entry.getKey().getReasonText() + " ").withColor(ColorBank.WHITE_GRAY)
-                        .append(Component.literal("[" + entry.getValue().size() + "]").withColor(ColorBank.MC_RED));
-
+                int numInvalidPunishments = 0;
 
                 if (PunishmentTrack.expiringPunishments.contains(entry.getKey())) {
-                    int numInvalidPunishments = 0;
-                    if (PunishmentTrack.expiringPunishments.contains(entry.getKey())) {
-                        for (PunishmentData punishmentData : entry.getValue()) {
-                            if (punishmentData.chronoTimestamp().getTimestamp() < ChronoTimestamp.PAST_from_DHMS(14, 0, 0, 0).getTimestamp()) {
-                                numInvalidPunishments++;
-                            }
+                    for (PunishmentData punishmentData : entry.getValue()) {
+                        if (punishmentData.chronoTimestamp().getTimestamp() < ChronoTimestamp.PAST_from_DHMS(30, 0, 0, 0).getTimestamp()) {
+                            numInvalidPunishments++;
                         }
                     }
-                    if (numInvalidPunishments > 0) trackEntry = trackEntry.copy().append(Component.literal(" (" + numInvalidPunishments + " uncounted)").withColor(ColorBank.MC_GRAY));
                 }
+
+                Component trackEntry = Component.literal( entry.getKey().getReasonText() + " ").withColor(ColorBank.WHITE_GRAY)
+                        .append(Component.literal("[" + (entry.getValue().size() -  numInvalidPunishments) + "]").withColor(ColorBank.MC_RED));
+
+
+                if (numInvalidPunishments > 0) trackEntry = trackEntry.copy().append(Component.literal(" (" + numInvalidPunishments + " uncounted)").withColor(ColorBank.MC_GRAY));
+
 
                 text.add(trackEntry);
             }

@@ -9,7 +9,6 @@ import mia.modmod.features.Feature;
 import mia.modmod.features.FeatureManager;
 import mia.modmod.features.impl.internal.commands.CommandScheduler;
 import mia.modmod.features.impl.internal.commands.ScheduledCommand;
-import mia.modmod.features.impl.moderation.tracker.PlayerOutliner;
 import mia.modmod.features.impl.moderation.tracker.PlayerTracker;
 import mia.modmod.features.listeners.ModifiableEventData;
 import mia.modmod.features.listeners.ModifiableEventResult;
@@ -18,7 +17,6 @@ import mia.modmod.features.listeners.impl.RegisterCommandListener;
 import mia.modmod.features.listeners.impl.TickEvent;
 import mia.modmod.features.parameters.ParameterIdentifier;
 import mia.modmod.features.parameters.impl.BooleanDataField;
-import mia.modmod.features.parameters.impl.StringDataField;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.commands.CommandBuildContext;
@@ -46,7 +44,7 @@ public final class ReportTeleport extends Feature implements ChatEventListener, 
     public static final String HASH_PREFIX = "handling report ID=";
 
     public ReportTeleport(Categories category) {
-        super(category, "ReportTeleport", "reportteleport", "Click on report msgs to teleport the offender.");
+        super(category, "Report Teleport", "reportteleport", "Click on report msgs to teleport the offender.");
         runalts = new BooleanDataField("Run /alts", "Runs /alts when you click on a report", ParameterIdentifier.of(this, "runalts"), true, true);
         msgOnReportTeleport = new BooleanDataField("Send /mb Handled Message Hash", "Send an automated message when you click on a new report\n\n'" + HASH_PREFIX + "$HASH' $HASH is a hash of the report.\n\nOther mods using " + Mod.MOD_ID + " will mark the report with the same hash as handled.", ParameterIdentifier.of(this, "report_msg_hash"), true, true);
 

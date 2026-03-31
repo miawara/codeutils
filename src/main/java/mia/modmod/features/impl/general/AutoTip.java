@@ -4,15 +4,11 @@ import mia.modmod.features.Categories;
 import mia.modmod.features.Feature;
 import mia.modmod.features.impl.internal.commands.CommandScheduler;
 import mia.modmod.features.impl.internal.commands.ScheduledCommand;
-import mia.modmod.features.impl.internal.permissions.Permissions;
 import mia.modmod.features.listeners.ModifiableEventData;
 import mia.modmod.features.listeners.ModifiableEventResult;
 import mia.modmod.features.listeners.impl.ChatEventListener;
 import mia.modmod.features.parameters.ParameterIdentifier;
 import mia.modmod.features.parameters.impl.DoubleDataField;
-import mia.modmod.features.parameters.impl.FloatDataField;
-import mia.modmod.features.parameters.impl.IntegerDataField;
-import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -21,7 +17,7 @@ import java.util.regex.Pattern;
 public final class AutoTip extends Feature implements ChatEventListener {
     private final DoubleDataField autoTipDelay;
     public AutoTip(Categories category) {
-        super(category, "Auto Tip", "autotip", "Automatically tips boosters", Permissions.NONE);
+        super(category, "Auto Tip", "autotip", "Automatically tips boosters");
         autoTipDelay = new DoubleDataField("Auto Tip Delay (seconds)", "", ParameterIdentifier.of(this, "delay"), 0.0, true);
     }
 

@@ -6,9 +6,6 @@ import mia.modmod.core.KeyBindManager;
 import mia.modmod.core.MiaKeyBind;
 import mia.modmod.features.Categories;
 import mia.modmod.features.Feature;
-import mia.modmod.features.impl.internal.permissions.ModeratorPermission;
-import mia.modmod.features.impl.internal.permissions.Permissions;
-import mia.modmod.features.impl.internal.permissions.SupportPermission;
 import mia.modmod.features.impl.internal.server.ServerManager;
 import mia.modmod.features.listeners.impl.RegisterKeyBindEvent;
 import mia.modmod.features.listeners.impl.RenderHUD;
@@ -27,7 +24,7 @@ public final class ModQA extends Feature implements RegisterKeyBindEvent, TickEv
     public final BooleanDataField safetyMode;
 
     public ModQA(Categories category) {
-        super(category, "Mod Quick Access Screen", "modqa", "Screen for selecting common ban / mute reasons", new Permissions(SupportPermission.NONE, ModeratorPermission.JR_MOD));
+        super(category, "Mod Quick Access Screen", "modqa", "Screen for selecting common ban / mute reasons");
         openQA = new MiaKeyBind("Open Mod Screen", GLFW.GLFW_KEY_X, KeyBindCategories.STAFF);
         safetyMode = new BooleanDataField("Safety Mode", "prevents u from banning yourself (i already made it pretty hard this is for testing purposes only)", ParameterIdentifier.of(this, "safe_mode"), true, true);
     }

@@ -2,12 +2,9 @@ package mia.modmod.features.impl.support.hud;
 
 import mia.modmod.ColorBank;
 import mia.modmod.Mod;
-import mia.modmod.core.MathUtils;
 import mia.modmod.features.Categories;
 import mia.modmod.features.Feature;
-import mia.modmod.features.impl.internal.permissions.ModeratorPermission;
-import mia.modmod.features.impl.internal.permissions.Permissions;
-import mia.modmod.features.impl.internal.permissions.SupportPermission;
+import mia.modmod.features.impl.moderation.tracker.punishments.ChronoTimestamp;
 import mia.modmod.features.listeners.ModifiableEventData;
 import mia.modmod.features.listeners.ModifiableEventResult;
 import mia.modmod.features.listeners.impl.ChatEventListener;
@@ -32,7 +29,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,7 +47,7 @@ public final class SupportHUD extends Feature implements RenderHUD, ChatEventLis
     private final IntegerDataField maxWidthDataField;
 
     public SupportHUD(Categories category) {
-        super(category, "Support HUD", "supporthud", "get back to work wageslave, put on that customer service smile and earn those sparks!", new Permissions(SupportPermission.HELPER, ModeratorPermission.NONE));
+        super(category, "Support HUD", "supporthud", "get back to work wageslave, put on that customer service smile and earn those sparks!");
         maxWidthDataField = new IntegerDataField("Max HUD Text Width", "Maximum width in number of pixels the HUD is allowed to take up before it wraps session reason texts.", ParameterIdentifier.of(this, "max_width"), 300, true);
     }
 
@@ -162,7 +158,7 @@ public final class SupportHUD extends Feature implements RenderHUD, ChatEventLis
                 ArrayList<Component> textList = new ArrayList<>();
                 //textList.add(Component.literal("cᴜʀʀᴇɴᴛ ꜱᴇꜱꜱɪᴏɴ:"));
 
-                String HMSTimestamp = MathUtils.convertTimestampToHMS(System.currentTimeMillis() - currentSupportSession.timestamp);
+                String HMSTimestamp = ChronoTimestamp.ABSOLUTE_from_Timestamp(currentSupportSession.timestamp).PAST_DHMS_string();
                 textList.add(
 
                         Component.literal("cᴜʀʀᴇɴᴛ ꜱᴇꜱꜱɪᴏɴ:").withColor(ColorBank.WHITE_GRAY)
@@ -198,7 +194,7 @@ public final class SupportHUD extends Feature implements RenderHUD, ChatEventLis
                 int i = 0;
                 for (SessionEntry sessionEntry : sessionQueue.values()) {
                     i++;
-                    String HMSTimestamp = MathUtils.convertTimestampToHMS(System.currentTimeMillis() - sessionEntry.timestamp);
+                    String HMSTimestamp = ChronoTimestamp.ABSOLUTE_from_Timestamp(sessionEntry.timestamp).PAST_DHMS_string();
                     textList.add(
                             Component.literal("#" + i).withColor(ColorBank.MC_GRAY)
                                     .append(
@@ -228,7 +224,7 @@ public final class SupportHUD extends Feature implements RenderHUD, ChatEventLis
                 int i = 0;
                 for (SupportQuestionEntry questionEntry : questionQueue.values()) {
                     i++;
-                    String HMSTimestamp = MathUtils.convertTimestampToHMS(System.currentTimeMillis() - questionEntry.timestamp());
+                    String HMSTimestamp = ChronoTimestamp.ABSOLUTE_from_Timestamp(questionEntry.timestamp()).PAST_DHMS_string();
                     textList.add(
                             Component.literal(questionEntry.name()).withColor(0x97ff94)
                                     .append(

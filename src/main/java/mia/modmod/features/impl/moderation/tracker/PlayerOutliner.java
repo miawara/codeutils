@@ -1,16 +1,10 @@
 package mia.modmod.features.impl.moderation.tracker;
 
-import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import mia.modmod.ColorBank;
 import mia.modmod.Mod;
 import mia.modmod.core.StreamUtils;
 import mia.modmod.features.Categories;
 import mia.modmod.features.Feature;
-import mia.modmod.features.FeatureManager;
-import mia.modmod.features.impl.internal.permissions.ModeratorPermission;
-import mia.modmod.features.impl.internal.permissions.Permissions;
-import mia.modmod.features.impl.internal.permissions.SupportPermission;
 import mia.modmod.features.impl.internal.server.ServerManager;
 import mia.modmod.features.listeners.impl.*;
 import mia.modmod.features.parameters.ParameterIdentifier;
@@ -19,8 +13,6 @@ import mia.modmod.render.util.*;
 import mia.modmod.render.util.Point;
 import mia.modmod.render.util.elements.DrawRect;
 import mia.modmod.render.util.elements.DrawText;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.DeltaTracker;
@@ -29,8 +21,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.commands.CommandBuildContext;
-import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.world.entity.player.Player;
@@ -46,7 +36,7 @@ public final class PlayerOutliner extends Feature implements RenderHUD, ServerCo
     private final ColorDataField outlinerColor;
 
     public PlayerOutliner(Categories category) {
-        super(category, "Player Outliner", "outliner", "outlines tracked players", new Permissions(SupportPermission.NONE, ModeratorPermission.JR_MOD));
+        super(category, "Player Outliner", "outliner", "outlines tracked players");
         outlinerColor = new ColorDataField("Outline Color", "", new ParameterIdentifier(this, "outline_color"), new Color(0xed7aff), true);
     }
 

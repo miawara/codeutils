@@ -4,7 +4,6 @@ import mia.modmod.ColorBank;
 import mia.modmod.Mod;
 import mia.modmod.features.FeatureManager;
 import mia.modmod.features.impl.moderation.ModQA;
-import mia.modmod.features.impl.moderation.reports.ReportTracker;
 import mia.modmod.features.impl.moderation.tracker.PlayerTracker;
 import mia.modmod.features.impl.moderation.tracker.punishments.*;
 import mia.modmod.render.screens.FPSAnimation;
@@ -242,7 +241,7 @@ public class ModQAScreen extends Screen {
 
                     if (PunishmentTrack.expiringPunishments.contains(punishmentTrack)) {
                         for (PunishmentData punishmentData : trackHistory) {
-                            if (punishmentData.chronoTimestamp().getTimestamp() > ChronoTimestamp.PAST_from_DHMS(14, 0, 0, 0).getTimestamp()) {
+                            if (punishmentData.chronoTimestamp().getTimestamp() > ChronoTimestamp.PAST_from_DHMS(32, 0, 0, 0).getTimestamp()) {
                                 numOffenses++;
                             }
                         }
@@ -323,7 +322,7 @@ public class ModQAScreen extends Screen {
                             boolean isWarning = tier.equals(PunishmentDuration.WARNING);
                             boolean isPerm = tier.equals(PunishmentDuration.PERM);
 
-                            if (isWarning) tierText = Component.literal("Chances: " + Math.max(chances - numOffenses , 0));
+                            if (isWarning) tierText = Component.literal("Chances: " + Math.max(chances - numOffenses , 0) +" / " + chances);
                             if (isPerm)    tierText = Component.literal("Permanent");
 
                             int tierRectColor = ARGB.lerpColor(0xffb09e, 0xff461c, ((float) (m+1) / tierList.size()));
