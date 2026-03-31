@@ -43,7 +43,6 @@ public final class ConfigStore {
     }
 
     public static void save() {
-        if (configData == null) load();
         for (Feature feature : FeatureManager.getFeatures()) {
             feature.getParameterDataFields().forEach(ConfigStore::saveParameter);
         }

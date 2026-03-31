@@ -108,8 +108,6 @@ public final class PermissionTracker extends Feature implements AlwaysEnabled, S
         supportPermission.setValue(newPermission.supportPermission());
         moderatorPermission.setValue(newPermission.moderatorPermission());
         adminPermission.setValue(newPermission.adminPermission());
-
-        ConfigStore.save();
     }
 
     @Override
