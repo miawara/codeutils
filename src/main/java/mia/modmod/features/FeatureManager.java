@@ -23,6 +23,7 @@ import mia.modmod.features.impl.moderation.tracker.PlayerTracker;
 import mia.modmod.features.impl.support.AutoQueue;
 import mia.modmod.features.impl.support.hud.SupportHUD;
 import mia.modmod.features.listeners.AbstractEventListener;
+import mia.modmod.features.listeners.impl.RegisterKeyBindEvent;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -91,19 +92,28 @@ public final class FeatureManager {
     }
 
 
-    public static <T extends Feature> boolean hasFeature(Class<T> identifier) { return features.containsKey(identifier); }
-    public static <T extends Feature> T getFeature(Class<T> identifier) { return (T) features.get(identifier); }
-    public static Collection<Feature> getFeatures() { return getFeatureMap().values(); }
-    public static HashMap<Class<? extends Feature>, Feature> getFeatureMap() { return features; }
+    public static <T extends Feature> boolean hasFeature(Class<T> identifier) {
+        return features.containsKey(identifier);
+    }
+
+    public static <T extends Feature> T getFeature(Class<T> identifier) {
+        return (T) features.get(identifier);
+    }
+
+    public static Collection<Feature> getFeatures() {
+        return getFeatureMap().values();
+    }
+
+    public static HashMap<Class<? extends Feature>, Feature> getFeatureMap() {
+        return features;
+    }
 
     public static <T extends AbstractEventListener> List<T> getFeaturesByIdentifier(Class<T> listener) {
-        return getFeatures().stream().filter((listener::isInstance)).map((feature -> (T) feature)).filter(feature -> ((Feature) feature).getEnabled()).collect(Collectors.toList());
+        return getFeatures().stream().filter((listener::isInstance)).map((feature -> (T) feature)).filter(feature -> (listener.equals(RegisterKeyBindEvent.class) || ((Feature) feature).getEnabled())).collect(Collectors.toList());
     }
 
     public static <T extends AbstractEventListener> void implementFeatureListener(Class<T> listener, Consumer<T> consumer) {
         getFeaturesByIdentifier(listener).forEach(consumer);
     }
-
-    //public static List<? extends AbstractEventListener> getFeaturesByListener(FeatureListener featureListener) { return getFeaturesByIdentifier(featureListener.getIdentifier()); }
 }
 
