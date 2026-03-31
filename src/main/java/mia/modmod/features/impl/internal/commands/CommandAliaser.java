@@ -26,7 +26,6 @@ public final class CommandAliaser extends Feature implements RegisterCommandList
     public void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandBuildContext registryAccess) {
         List<SimpleAlias> simpleAliasList = List.of(
                 new SimpleAlias("mod vanish", "mv", "modv"),
-                new SimpleAlias("admin vanish", "av", "adminv"),
                 new SimpleAlias("support queue", "queue"),
                 new SimpleAlias("item get debug_stick", "debug", "debug_stick"),
                 new SimpleAlias("item nbt", "nbt"),
