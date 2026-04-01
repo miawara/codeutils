@@ -8,6 +8,7 @@ import mia.modmod.core.StreamUtils;
 import mia.modmod.features.Categories;
 import mia.modmod.features.Feature;
 import mia.modmod.features.FeatureManager;
+import mia.modmod.features.impl.internal.commands.ChatConsumer;
 import mia.modmod.features.impl.internal.commands.CommandScheduler;
 import mia.modmod.features.impl.internal.commands.ScheduledCommand;
 import mia.modmod.features.impl.moderation.reports.ReportTeleport;
@@ -75,6 +76,11 @@ public final class PlayerTracker extends Feature implements RegisterCommandListe
         if (!PlayerTracker.getTrackerPlayers().contains(name)) FeatureManager.getFeature(PlayerTracker.class).internalAddTrackedPlayer(name);
     }
 
+
+    public static void removeTrackedPlayer(String name) {
+        if (PlayerTracker.getTrackerPlayers().contains(name)) FeatureManager.getFeature(PlayerTracker.class).trackedPlayers.remove(name);
+    }
+
     private void internalAddTrackedPlayer(String name) {
         trackedPlayers.addFirst(name);
         if (!getPlayerHistoryQueue.contains(name)) getPlayerHistoryQueue.add(name);
@@ -84,7 +90,6 @@ public final class PlayerTracker extends Feature implements RegisterCommandListe
         historyState = HistoryState.HEAD;
         capturePunishmentStartTimestamp = System.currentTimeMillis();
         trackedPlayerPunishmentTracks.put(name, new PunishmentTracks());
-        if (!playerJoinDateStringMap.containsKey(currentGetPlayerHistory)) CommandScheduler.addCommand(new ScheduledCommand("whois " + name));
         CommandScheduler.addCommand(new ScheduledCommand("history " + name + " 9999"));
     }
 
@@ -144,7 +149,7 @@ public final class PlayerTracker extends Feature implements RegisterCommandListe
             for (PunishmentData punishmentData : activePunishments) {
                 text.add(
                         Component.literal(punishmentData.reason()).withColor(ColorBank.MC_RED)
-                                .append(Component.literal(" [Expires: " + ((punishmentData.getExpirationString().isPresent() ?  punishmentData.getExpirationString().get() : "N/A")) + "]").withColor(0xc2301d))
+                                .append(Component.literal(" [Expires: " + ((punishmentData.getExpirationString().isPresent() ? punishmentData.getExpirationString().get() : "N/A")) + "]").withColor(0xc2301d))
                 );
             }
         }
@@ -205,6 +210,27 @@ public final class PlayerTracker extends Feature implements RegisterCommandListe
 
         totalPunishments = 0;
         capturedPunishments = 0;
+
+        if (!playerJoinDateStringMap.containsKey(currentGetPlayerHistory)) {
+            CommandScheduler.addCommand(
+                    new ScheduledCommand("whois " + name,
+                            0L,
+                            List.of(
+                                    new ChatConsumer(
+                                            Pattern.compile("→ Joined: (.*)\\n"),
+                                            (matcher) -> {
+                                                playerJoinDateStringMap.put(currentGetPlayerHistory, matcher.group(1));
+                                            },
+                                            () -> {
+
+                                            },
+                                            3000L,
+                                            true
+                                    )
+                            )
+                    ));
+        }
+
         currentGetPlayerHistory = null;
     }
 
@@ -213,7 +239,6 @@ public final class PlayerTracker extends Feature implements RegisterCommandListe
     public ModifiableEventResult<Component> chatEvent(ModifiableEventData<Component> message, CallbackInfo ci) {
         String content = message.base().getString();
         Matcher matcher;
-
 
         matcher = PUNISH_BODY_PATTERN.matcher(content);
         if (matcher.find()) {
@@ -229,7 +254,6 @@ public final class PlayerTracker extends Feature implements RegisterCommandListe
                     for (String pattern : track.getPatterns()) {
                         if (Pattern.compile(pattern, Pattern.CASE_INSENSITIVE).matcher(reason).find()) {
                             punishmentTrack = track;
-                            break;
                         }
                     }
                     if (punishmentTrack != null) break;
@@ -280,20 +304,15 @@ public final class PlayerTracker extends Feature implements RegisterCommandListe
                 if (matcher.find()) {
                     if (latestPunishment != null) latestPunishment.setExpirationString(matcher.group(1));
                 }
-                ci.cancel();
+                if (!Pattern.matches("^\\[MOD]]", content)) ci.cancel();
             }
             return message.pass();
         }
-        else ci.cancel();
+        else if (!Pattern.matches("^\\[MOD]]", content))  ci.cancel();
 
         matcher = Pattern.compile("^Expires in (.+)\\.").matcher(content);
         if (matcher.find()) {
             if (latestPunishment != null) latestPunishment.setExpirationString(matcher.group(1));
-        }
-
-        matcher = Pattern.compile("→ Joined: (.*)\\n").matcher(content);
-        if (matcher.find() && !playerJoinDateStringMap.containsKey(currentGetPlayerHistory)) {
-            playerJoinDateStringMap.put(currentGetPlayerHistory, matcher.group(1));
         }
 
         if (historyState.equals(HistoryState.HEAD)) {
@@ -347,7 +366,9 @@ public final class PlayerTracker extends Feature implements RegisterCommandListe
                 historyState = HistoryState.PUNISHMENT;
             }
         }
+
         // ignore unmutes/unbans cus they dont matter + expiration is shown in punish message :3
+        // also its impossible to tell whether an unban was from a valid appeal or a mistake
         return message.pass();
     }
 

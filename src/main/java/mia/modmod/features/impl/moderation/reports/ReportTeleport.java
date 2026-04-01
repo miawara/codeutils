@@ -90,6 +90,7 @@ public final class ReportTeleport extends Feature implements ChatEventListener, 
 
 
     public static void internalReportTeleport(String player_name, String node_id) {
+        PlayerTracker.removeTrackedPlayer(player_name);
         PlayerTracker.addTrackedPlayer(player_name);
         requestingHistory = true;
         isInternalReportTeleport = true;
@@ -132,17 +133,15 @@ public final class ReportTeleport extends Feature implements ChatEventListener, 
                             String offender = StringArgumentType.getString(commandContext, "offender");
                             String hashcode = StringArgumentType.getString(commandContext, "hashcode");
 
-                            Mod.MC.execute(() -> {
-                                for (DatedReport report : FeatureManager.getFeature(ReportTracker.class).reports) {
-                                    if (!report.handled()) {
-                                        if (report.getReportHash() == Integer.parseInt(hashcode)) {
-                                            report.setHandled(true);
-                                            sendModChatReportHash(report.getReportHash());
-                                            break;
-                                        }
+                            for (DatedReport report : FeatureManager.getFeature(ReportTracker.class).reports) {
+                                if (!report.handled()) {
+                                    if (report.getReportHash() == Integer.parseInt(hashcode)) {
+                                        report.setHandled(true);
+                                        sendModChatReportHash(report.getReportHash());
+                                        break;
                                     }
                                 }
-                            });
+                            }
 
                             internalReportTeleport(offender, node_id);
                             return 1;
