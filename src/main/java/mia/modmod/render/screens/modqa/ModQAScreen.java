@@ -384,13 +384,19 @@ public class ModQAScreen extends Screen {
                             Mod.messageError("hey stop that (Safety Mode Active)");
                             return;
                         }
+
+                        // bypass the command scheduler :3
+                        // this might cause some issues later but who cares
                         Mod.sendCommand(command);
+
                         PlayerTracker.getTrackerPlayers().remove(selectedPlayer);
                         if (!PlayerTracker.getTrackerPlayers().isEmpty()) {
                             setSelectedPlayer(PlayerTracker.getTrackerPlayers().getFirst());
                         } else {
                             setSelectedPlayer(null);
                         }
+
+                        optionButton.setCallback(() -> {});
                     });
                     DrawText optionText = new DrawText(
                             new Point(playerNameMargin, 0),
