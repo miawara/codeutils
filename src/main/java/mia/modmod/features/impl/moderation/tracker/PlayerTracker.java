@@ -246,6 +246,7 @@ public final class PlayerTracker extends Feature implements RegisterCommandListe
         String content = message.base().getString();
         Matcher matcher;
 
+
         matcher = PUNISH_BODY_PATTERN.matcher(content);
         if (matcher.find()) {
             String offender = matcher.group(1);
@@ -316,11 +317,11 @@ public final class PlayerTracker extends Feature implements RegisterCommandListe
                 if (matcher.find()) {
                     if (latestPunishment != null) latestPunishment.setExpirationString(matcher.group(1));
                 }
-                if (!Pattern.matches("^\\[MOD]", content)) ci.cancel();
+                if (!Pattern.matches("^\\[MOD].*", content)) ci.cancel();
             }
             return message.pass();
         }
-        else if (!Pattern.matches("^\\[MOD]", content))  ci.cancel();
+        else if (!Pattern.matches("^\\[MOD].*", content))  ci.cancel();
 
         matcher = Pattern.compile("^Expires in (.+)\\.").matcher(content);
         if (matcher.find()) {
