@@ -110,10 +110,11 @@ public final class PlayerTracker extends Feature implements RegisterCommandListe
     }
 
     private void initGetPlayerHistory(String name) {
+        currentGetPlayerHistory = name;
         historyState = HistoryState.HEAD;
         capturePunishmentStartTimestamp = System.currentTimeMillis();
         trackedPlayerPunishmentTracks.put(name, new PunishmentTracks());
-        CommandScheduler.addCommand(new ScheduledCommand("history " + name + " 9999"));
+        CommandScheduler.addCommand(new ScheduledCommand("hist " + name + " 9999"));
     }
 
     public ArrayList<Component> getTrackedHistoryText(String player) {
@@ -244,8 +245,6 @@ public final class PlayerTracker extends Feature implements RegisterCommandListe
     public ModifiableEventResult<Component> chatEvent(ModifiableEventData<Component> message, CallbackInfo ci) {
         String content = message.base().getString();
         Matcher matcher;
-
-        if (!Pattern.matches("^\\[MOD]", content)) return message.pass();
 
         matcher = PUNISH_BODY_PATTERN.matcher(content);
         if (matcher.find()) {

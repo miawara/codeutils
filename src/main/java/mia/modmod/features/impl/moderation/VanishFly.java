@@ -5,6 +5,6 @@ import mia.modmod.features.Feature;
 
 public final class VanishFly extends Feature {
     public VanishFly(Categories category) {
-        super(category, "Vanish Fly", "vanishfly", "removed default spectator acceleration");
+        super(category, "Instant Vanish Acceleration", "vanishfly", "While in vanish you instantly accelerate and decelerate.");
     }
 }
