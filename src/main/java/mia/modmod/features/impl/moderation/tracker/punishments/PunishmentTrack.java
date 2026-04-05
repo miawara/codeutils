@@ -35,13 +35,14 @@ public enum PunishmentTrack {
 
     // Requires custom duration input
 
-    INAPPROPRIATE_PLOT_CONTENT("Inappropriate Plot Content", new PunishmentEscalation(ServerPunishmentType.BAN,0, PunishmentDuration.PERM, PunishmentDuration.PERM), List.of("(inappropriate|explicit|sexual) (plot |)content")),
+    INAPPROPRIATE_PLOT_CONTENT("Inappropriate Plot Content", new PunishmentEscalation(ServerPunishmentType.BAN,0, PunishmentDuration.PERM, PunishmentDuration.PERM), List.of("(inappropriate|explicit|sexual) plot content")),
     MUTE_EVASION("Mute Evasion", new PunishmentEscalation(ServerPunishmentType.BAN,0, PunishmentDuration.PERM, PunishmentDuration.PERM), List.of("Mute Evasion", "Mute Bypass", "bypassing mute", "bypass mute", "mute evasion"));
 
     public static final List<PunishmentTrack> expiringPunishments = List.of(
             SPAMMING,
             PLOT_AD,
-            FILTER_BYPASS
+            FILTER_BYPASS,
+            INAPPROPRIATE_CHAT
     );
 
     private final String reasonText;
