@@ -2,7 +2,7 @@
 	"schemaVersion": 1,
 	"id": "modmod",
 	"version": "${version}",
-	"name": ".modmod",
+	"name": "modmod",
 	"description": "one person gets meteorclient everyone else has to run",
 	"authors": [
 		"miawarajj"

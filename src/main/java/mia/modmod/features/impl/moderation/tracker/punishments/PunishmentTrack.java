@@ -2,6 +2,7 @@ package mia.modmod.features.impl.moderation.tracker.punishments;
 
 import mia.modmod.core.FileManager;
 
+import java.sql.ResultSet;
 import java.util.List;
 import java.util.logging.Filter;
 
@@ -42,7 +43,8 @@ public enum PunishmentTrack {
             SPAMMING,
             PLOT_AD,
             FILTER_BYPASS,
-            INAPPROPRIATE_CHAT
+            INAPPROPRIATE_CHAT,
+            TOXICITY_GENERAL_RUDENESS
     );
 
     private final String reasonText;
@@ -59,3 +61,4 @@ public enum PunishmentTrack {
     public PunishmentEscalation getPunishmentEscalation() { return punishmentEscalation; }
     public List<String> getPatterns() { return patterns; }
 }
+

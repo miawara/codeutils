@@ -102,9 +102,9 @@ public final class ReportTeleport extends Feature implements ChatEventListener, 
     @Override
     public void tickR(int tick) {
         if (isInternalReportTeleport && !requestingHistory) {
-            CommandScheduler.addCommand(new ScheduledCommand("preference mod_vanish true", 500L));
+            CommandScheduler.addCommand(new ScheduledCommand("preference mod_vanish true"));
             CommandScheduler.addCommand(new ScheduledCommand("server " + requestNodeID));
-            CommandScheduler.addCommand(new ScheduledCommand("tp " + requestPlayerName, 250L));
+            CommandScheduler.addCommand(new ScheduledCommand("tp " + requestPlayerName));
             if (FeatureManager.getFeature(ReportTeleport.class).runalts.getValue()) CommandScheduler.addCommand(new ScheduledCommand("alts " + requestPlayerName));
 
             isInternalReportTeleport = false;
