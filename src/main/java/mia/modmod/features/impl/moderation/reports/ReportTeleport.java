@@ -46,7 +46,7 @@ public final class ReportTeleport extends Feature implements ChatEventListener, 
     public ReportTeleport(Categories category) {
         super(category, "Report Teleport", "reportteleport", "Click on report msgs to teleport the offender.");
         runalts = new BooleanDataField("Run /alts", "Runs /alts when you click on a report", ParameterIdentifier.of(this, "runalts"), true, true);
-        msgOnReportTeleport = new BooleanDataField("Send /mb Handled Message Hash", "Send an automated message when you click on a new report\n\n'" + HASH_PREFIX + "$HASH' $HASH is a hash of the report.\n\nOther mods using " + Mod.MOD_ID + " will mark the report with the same hash as handled.", ParameterIdentifier.of(this, "report_msg_hash"), true, true);
+        msgOnReportTeleport = new BooleanDataField("Send Report Handled Message", "Send an automated message when you click on a new report\n\n'" + HASH_PREFIX + "$HASH' $HASH is a hash of the report.\n\nOther mods using " + Mod.MOD_ID + " will mark the report with the same hash as handled.", ParameterIdentifier.of(this, "report_msg_hash"), false, true);
 
     }
 
