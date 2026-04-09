@@ -34,6 +34,7 @@ public final class ReportTeleport extends Feature implements ChatEventListener, 
 
     private final BooleanDataField runalts;
     private final BooleanDataField msgOnReportTeleport;
+    private static BooleanDataField trackPlayer, requestHistory;
 
     public static boolean requestingHistory = false;
     private static boolean isInternalReportTeleport = false;
@@ -47,6 +48,8 @@ public final class ReportTeleport extends Feature implements ChatEventListener, 
         super(category, "Report Teleport", "reportteleport", "Click on report msgs to teleport the offender.");
         runalts = new BooleanDataField("Run /alts", "Runs /alts when you click on a report", ParameterIdentifier.of(this, "runalts"), true, true);
         msgOnReportTeleport = new BooleanDataField("Send Report Handled Message", "Send an automated message when you click on a new report\n\n'" + HASH_PREFIX + "$HASH' $HASH is a hash of the report.\n\nOther mods using " + Mod.MOD_ID + " will mark the report with the same hash as handled.", ParameterIdentifier.of(this, "report_msg_hash"), false, true);
+        trackPlayer  = new BooleanDataField("Track Report Offender", "Adds player to tracker when report is clicked on", ParameterIdentifier.of(this, "track_player"), true, true);
+        requestHistory = new BooleanDataField("Get Offender History", "Automatically requests offender's history when report is clicked on", ParameterIdentifier.of(this, "request_history"), true, true);
 
     }
 
@@ -90,9 +93,11 @@ public final class ReportTeleport extends Feature implements ChatEventListener, 
 
 
     public static void internalReportTeleport(String player_name, String node_id) {
-        PlayerTracker.removeTrackedPlayer(player_name);
-        PlayerTracker.addTrackedPlayer(player_name);
-        requestingHistory = true;
+        if (trackPlayer.getValue()) {
+            PlayerTracker.removeTrackedPlayer(player_name);
+            PlayerTracker.addTrackedPlayer(player_name);
+        }
+        requestingHistory = requestHistory.getValue();
         isInternalReportTeleport = true;
 
         requestPlayerName = player_name;
