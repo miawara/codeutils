@@ -32,9 +32,7 @@ import java.util.regex.Pattern;
 public final class ReportTeleport extends Feature implements ChatEventListener, RegisterCommandListener, TickEvent {
     public static final Pattern REPORT_PATTERN = Pattern.compile("^! Incoming Report \\(([A-Za-z0-9_]{3,16})\\)\\n\\|  Offender: ([A-Za-z0-9_]{3,16})\\n\\|  Offense: (.*)\\n\\|  Location: (Private |)(.*) (\\d*) ((?:Mode|Spawn|Existing).*)$");
 
-    private final BooleanDataField runalts;
-    private final BooleanDataField msgOnReportTeleport;
-    private static BooleanDataField trackPlayer, requestHistory;
+    private static BooleanDataField msgOnReportTeleport, runalts, trackPlayer, requestHistory;
 
     public static boolean requestingHistory = false;
     private static boolean isInternalReportTeleport = false;

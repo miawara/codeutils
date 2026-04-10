@@ -5,12 +5,12 @@ import net.minecraft.util.Mth;
 
 import java.util.function.Function;
 
-public class FramIndependentAnimation {
+public class FrameIndependentAnimation {
     private AnimationStage animationStage;
     private float progress;
     private final Function<Float, Float> easingFunction;
 
-    public FramIndependentAnimation(AnimationStage animationStage, float progress, Function<Float, Float> easingFunction) {
+    public FrameIndependentAnimation(AnimationStage animationStage, float progress, Function<Float, Float> easingFunction) {
         this.animationStage = animationStage;
         this.progress = progress;
         this.easingFunction = easingFunction;

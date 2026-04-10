@@ -7,7 +7,7 @@ import mia.modmod.features.impl.moderation.reports.DatedReport;
 import mia.modmod.features.impl.moderation.reports.ReportTeleport;
 import mia.modmod.features.impl.moderation.reports.ReportTracker;
 import mia.modmod.features.impl.moderation.tracker.punishments.ChronoTimestamp;
-import mia.modmod.render.screens.FramIndependentAnimation;
+import mia.modmod.render.screens.FrameIndependentAnimation;
 import mia.modmod.render.screens.AnimationStage;
 import mia.modmod.render.util.*;
 import mia.modmod.render.util.Point;
@@ -29,7 +29,7 @@ import java.util.Locale;
 public class ReportScreen extends Screen {
     private final ReportTracker reportTracker;
     private final Screen parent;
-    public final FramIndependentAnimation animation;
+    public final FrameIndependentAnimation animation;
 
     private ArrayList<DrawButton> buttons = new ArrayList<>();
 
@@ -53,7 +53,7 @@ public class ReportScreen extends Screen {
     public ReportScreen(Screen parent) {
         super(Component.literal("REPORT_SCREEN"));
         this.parent = parent;
-        this.animation = new FramIndependentAnimation(AnimationStage.OPENING, 0f, EasingFunctions::easeInOutCircular);
+        this.animation = new FrameIndependentAnimation(AnimationStage.OPENING, 0f, EasingFunctions::easeInOutCircular);
         this.reportTracker = FeatureManager.getFeature(ReportTracker.class);
     }
 

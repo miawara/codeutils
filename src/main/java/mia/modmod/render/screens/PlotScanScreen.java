@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class PlotScanScreen extends Screen {
     private final Screen parent;
     private final PlotScanner plotScanner;
-    private FramIndependentAnimation animation;
+    private FrameIndependentAnimation animation;
 
     private ArrayList<DrawButton> buttons;
 
@@ -32,7 +32,7 @@ public class PlotScanScreen extends Screen {
         super(Component.literal("Plot Scanner Screen"));
         this.parent = parent;
         this.plotScanner = plotScanner;
-        this.animation = new FramIndependentAnimation(AnimationStage.CLOSED, 0f, (state) -> (float) MathUtils.easeInOutSine(state));
+        this.animation = new FrameIndependentAnimation(AnimationStage.CLOSED, 0f, (state) -> (float) MathUtils.easeInOutSine(state));
     }
 
     @Override
