@@ -50,6 +50,7 @@ public final class HitRange extends Feature {
     public static void drawCircle(PoseStack.Pose entry, VertexConsumer vertices, AvatarRenderState state) {
         if (Mod.MC.player == null) return;
         if (Mod.MC.level == null) return;
+        if (state.isSpectator) return;
 
         HashMap<Integer, Player> playerIds = new HashMap<>();
         for (String trackedName : PlayerTracker.getTrackerPlayers()) {
