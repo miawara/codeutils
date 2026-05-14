@@ -18,7 +18,7 @@ public enum PunishmentTrack {
 
     // this needs to be before so it catches extremely last
     INAPPROPRIATE_CHAT("Inappropriate Chat", new PunishmentEscalation(ServerPunishmentType.MUTE,1, PunishmentDuration.D3, PunishmentDuration.PERM), List.of("^Inappropriate (Chat|Topic)")),
-    SEVERELY_INAPPROPRIATE_CHAT("Extremely Inappropriate Chat", new PunishmentEscalation(ServerPunishmentType.MUTE,0, PunishmentDuration.D14, PunishmentDuration.PERM), List.of("(Severely|Extremely|Very|Disturbing|explicit) Inappropriate (Chat|Topics)", "pedo(|philia)", "Sexual", "creepy")),
+    SEVERELY_INAPPROPRIATE_CHAT("Extremely Inappropriate Chat Topics", new PunishmentEscalation(ServerPunishmentType.MUTE,0, PunishmentDuration.D14, PunishmentDuration.PERM), List.of("(Severely|Extremely|Very|Disturbing|explicit) Inappropriate (Chat|Topics)", "pedo(|philia)", "Sexual", "creepy")),
 
     // not sure why some of these are listed as having max durations, it doesn't really make sense to me as hacking and macroing are essentially the same thing and usually stuff like autoclicking is done through a hacked client or a custom python script
     // also tabbing is punished more harshly than autoclicking when tabbing is something that can be done in vanilla without any external modifications like wtf?!?
@@ -32,6 +32,7 @@ public enum PunishmentTrack {
 
     INAPPROPRIATE_SKIN_USERNAME("Inappropriate Skin / Username (Appeal when changed)", new PunishmentEscalation(ServerPunishmentType.BAN,0, PunishmentDuration.PERM, PunishmentDuration.PERM), List.of("(Inappropriate|explicit|disallowed|banned) Skin", "(Inappropriate|explicit|disallowed|banned) (|User)Name")),
     BAN_EVASION("Ban Evasion", new PunishmentEscalation(ServerPunishmentType.BAN,0, PunishmentDuration.PERM, PunishmentDuration.PERM), List.of("Ban Evasion")),
+    BOT_ACCOUNT("Bot Account / compromised Account", new PunishmentEscalation(ServerPunishmentType.BAN,0, PunishmentDuration.PERM, PunishmentDuration.PERM), List.of("Bot Account", "compromised")),
 
     // Requires custom duration input
 
